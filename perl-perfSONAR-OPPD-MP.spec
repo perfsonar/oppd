@@ -1,0 +1,201 @@
+%define install_base /opt/perfsonar_ps/oppd_mp
+
+%define relnum 1 
+%define disttag pSPS
+
+Name:			perl-perfSONAR-OPPD-MP
+Version:		3.4
+Release:		%{relnum}.%{disttag}
+Summary:		perfSONAR OPPD Measurement Point
+License:		Distributable, see LICENSE
+Group:			Development/Libraries
+URL:			http://www.perfsonar.net/
+Source0:		perfSONAR-OPPD-MP-%{version}.%{relnum}.tar.gz
+BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:		noarch
+Requires:		perl
+
+%description
+Executes on-demand measurements through a web interface
+
+%package Shared
+Summary:		MP Shared libs
+Group:			Development/Tools
+
+%description Shared
+Shared libraries used by the on-demand MP
+
+%package oppd
+Summary:		MP perfSONAR daemon
+Group:			Development/Tools
+Requires:       perl-perfSONAR-OPPD-MP-Shared
+Requires:	    ntp
+Requires:       perl(HTTP::Daemon::SSL)
+Obsoletes:      oppd
+Obsoletes:      perfsonar-oppd < 0.53
+
+%package BWCTL
+Summary:		BWCTL MP
+Group:			Development/Tools
+Requires:       perl-perfSONAR-OPPD-MP-Shared
+Requires:       perl-perfSONAR-OPPD-MP-oppd
+Requires:	    bwctl >= 1.5
+
+%description BWCTL
+Provides on-demand BWCTL measurements through a web interface
+
+%package OWAMP
+Summary:		OWAMP MP
+Group:			Development/Tools
+Requires:       perl-perfSONAR-OPPD-MP-Shared
+Requires:       perl-perfSONAR-OPPD-MP-oppd
+Requires:       perl(IO::Tty) >= 1.02
+Requires:       perl(IPC::Run)
+Requires:	    owamp
+
+%description OWAMP
+Provides on-demand OWAMP measurements through a web interface
+
+%description oppd
+Daemon that runs MP
+
+%package WebAdmin
+Summary:		MP Web Interface
+Group:			Development/Tools
+Requires:       httpd
+Requires:	    mod_perl
+Requires:	    perl-suidperl
+Requires:	    perl-perfSONAR-OPPD-MP-oppd
+Requires:	    perl-perfSONAR-OPPD-MP-BWCTL
+Requires:	    perl-perfSONAR-OPPD-MP-OWAMP
+Requires: 	    perl-Hash-Flatten
+
+%description WebAdmin
+Provides web page interface for ondemand measurements
+
+%pre oppd
+/usr/sbin/groupadd perfsonar 2> /dev/null || :
+/usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+
+%pre BWCTL
+/usr/sbin/groupadd perfsonar 2> /dev/null || :
+/usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+if [ "$1" = 0 ] ; then
+/sbin/service oppd stop > /dev/null 2>&1
+fi
+exit 0
+
+%pre OWAMP
+/usr/sbin/groupadd perfsonar 2> /dev/null || :
+/usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+if [ "$1" = 0 ] ; then
+/sbin/service oppd stop > /dev/null 2>&1
+fi
+exit 0
+
+%prep
+%setup -q -n perfSONAR-OPPD-MP-%{version}.%{relnum}
+
+%build
+
+%install
+rm -rf %{buildroot}
+make ROOTPATH=%{buildroot}/%{install_base} rpminstall
+mkdir -p %{buildroot}/etc/init.d
+install -m 0755 scripts/oppd %{buildroot}/etc/init.d/oppd
+mkdir -p %{buildroot}/etc/sysconfig
+install -m 0644 etc/oppd.sysconfig %{buildroot}/etc/sysconfig/oppd
+mkdir -p %{buildroot}/etc/httpd/conf.d
+install etc/oppd-WebAdmin-apache.conf.redhat %{buildroot}/etc/httpd/conf.d/oppd-WebAdmin.conf
+
+%clean
+rm -rf %{buildroot}
+
+%post oppd
+/sbin/chkconfig --add oppd
+
+%post BWCTL
+/sbin/service oppd start > /dev/null 2>&1
+
+%post OWAMP
+/sbin/service oppd start > /dev/null 2>&1
+
+%preun oppd
+if [ "$1" = 0 ] ; then
+/sbin/chkconfig --del oppd
+/sbin/service oppd stop
+exit 0
+
+%preun BWCTL
+if [ "$1" = 0 ] ; then
+/sbin/service oppd stop > /dev/null 2>&1
+fi
+exit 0
+
+%preun OWAMP
+if [ "$1" = 0 ] ; then
+/sbin/service oppd stop > /dev/null 2>&1
+fi
+exit 0
+
+%postun BWCTL
+if [ "$1" -ge 1 ]; then
+/sbin/service oppd condrestart > /dev/null 2>&1
+fi
+exit 0
+
+%postun OWAMP
+if [ "$1" -ge 1 ]; then
+/sbin/service oppd condrestart > /dev/null 2>&1
+fi
+exit 0
+
+%files Shared
+%defattr(-,perfsonar,perfsonar,-)
+%{install_base}/lib/NMWG/*
+%{install_base}/lib/NMWG.pm
+%{install_base}/lib/perfSONAR.pm
+%{install_base}/lib/perfSONAR/Client/*
+%{install_base}/lib/perfSONAR/DataStruct/*
+%{install_base}/lib/perfSONAR/SOAP/*
+%{install_base}/lib/perfSONAR/AS.pm
+%{install_base}/lib/perfSONAR/Auth.pm
+%{install_base}/lib/perfSONAR/DataStruct.pm
+%{install_base}/lib/perfSONAR/Echo.pm
+%{install_base}/lib/perfSONAR/LS.pm
+%{install_base}/lib/perfSONAR/MA.pm
+%{install_base}/lib/perfSONAR/MP.pm
+%{install_base}/lib/perfSONAR/Request.pm
+%{install_base}/lib/perfSONAR/SOAP.pm
+%{install_base}/lib/perfSONAR/Selftest.pm
+
+%files oppd
+%defattr(-,perfsonar,perfsonar,-)
+%doc %{install_base}/doc/*
+%attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd.pl
+%{install_base}/scripts/oppd
+%config /etc/init.d/oppd
+%config %{install_base}/etc/oppd.conf
+%config %{install_base}/etc/oppd.sysconfig
+%config %{install_base}/etc/oppd.d/*.xml
+%config /etc/sysconfig/oppd
+
+%files BWCTL
+%defattr(-,perfsonar,perfsonar,-)
+%config %{install_base}/etc/oppd.d/bwctl.conf
+%{install_base}/lib/perfSONAR/MP/BWCTL.pm
+
+%files OWAMP
+%defattr(-,perfsonar,perfsonar,-)
+%config %{install_base}/etc/oppd.d/owamp.conf
+%{install_base}/lib/perfSONAR/MP/OWAMP.pm
+
+%files WebAdmin
+%defattr(-,perfsonar,perfsonar,-)
+%config %{install_base}/web/*
+%config /etc/httpd/conf.d/oppd-WebAdmin.conf
+%{install_base}/etc/oppd-WebAdmin-*
+
+%changelog
+*  Wed May 21 2014 andy@es.net 
+- Combined packages into single spec file

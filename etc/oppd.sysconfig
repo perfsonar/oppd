@@ -1,0 +1,28 @@
+# Path to oppd.
+OPPD=/opt/perfsonar_ps/oppd_mp/bin/oppd.pl
+
+# Configuration file to be used by oppd.
+CONF_FILE=/opt/perfsonar_ps/oppd_mp/etc/oppd.conf
+
+# pid file to use. The init script overwrites the pid file used (from
+# configuration file or default) to make sure that the init script can control
+# the daemon via the pid file. Therefore you can change the pid file ONLY here!
+#PID_FILE=/var/run/oppd.pid
+
+# log file to use. If you set a log file here, it will not only be set as the
+# log file used by the daemon (overriding value from configuration file). The
+# daemon will also care about the ownership of the file based on the variables
+# USER and GROUP you can find below.
+#LOG_FILE=""
+
+# User to run the daemon as. Files (especially the pid file and log file, see
+# above) created by the daemon will be owned by this user.
+#USER=perfsonar
+
+# Group id used for pid file and log file (see above).
+#GROUP=perfsonar
+
+# Additional command line arguments (overriding options from configuration
+# file!).
+#OPTIONS=""
+

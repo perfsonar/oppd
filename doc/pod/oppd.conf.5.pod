@@ -1,0 +1,91 @@
+=head1 NAME
+
+B<oppd.conf> - configuration file for oppd.pl
+
+
+
+=head1 DESCRIPTION
+
+B<TBD>
+
+
+
+=head2 General daemon configuration
+
+B<TBD>
+
+
+
+=head2 Service sections
+
+Each service served by oppd is defined by a service section. 
+This section configures options necessary for the daemon to load the service
+specific modules.
+
+Service section format:
+
+B<TBD> Might be outdated!
+
+  <service SERVICE_NAME>
+    module          MODULE_NAME
+    servicetype     SERVICE_TYPE
+    name            DESCRIPTIVE_NAME
+    description     DESCRIPTIVE_TEXT
+    keyword         KEYWORD
+    metric          METRIC_NAME_1
+    metric          METRIC_NAME_2
+    ... 
+    metric          METRIC_NAME_N
+    tool            TOOL_NAME
+    <module_param> 
+      ... 
+    </module_param> 
+  </service SERVICE_NAME> 
+
+Each service section is enclosed in a <service> tag. The tag also contains the
+unique(!) name of the service defined by this section (SERVICE_NAME). 
+This configuration file style is similar to the Apache style configuration
+files.
+
+The SERVICE_NAME correlates to the URL the service will be available at. 
+E.g, MP/BWCTL means that the service can be reached via /services/MP/BWCTL. 
+In most cases it is useful (but not necessary) to correlate the SERVICE_NAME
+to the module name (MODULE_NAME), in this case MP::BWCTL.
+
+servicetype, name, description, and metric are information provided to the 
+Lookup Service. 
+
+Some of the parameters have different meanings for different service types and 
+not all parameters are applicable for all services. 
+Special configuration parameters for a specific service type are normally 
+provided in the nested element <module_param>. 
+
+Note that if you have to enter a binary to be executed (often necessary for 
+MPs, like bwctl) and the binary is not in the search path, you have to provide 
+a full path to the binary, otherwise the service will not be able to execute 
+the command.
+
+
+
+=head1 GENERAL OPTIONS
+
+B<TBD>
+
+
+
+=head1 SERVICE SECTION OPTIONS
+
+B<TBD>
+
+
+
+=head1 SEE ALSO
+
+oppd.pl
+
+
+
+=head1 AUTHORS
+
+DFN Labor Erlangen, win-labor@dfn.de
+

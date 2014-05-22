@@ -1,0 +1,21 @@
+<nmwg:message type="LSRegisterRequest"
+              id="msg1"
+              xmlns="http://ggf.org/ns/nmwg/tools/org/perfsonar/1.0/"
+              xmlns:perfsonar="http://ggf.org/ns/nmwg/tools/org/perfsonar/1.0/"
+              xmlns:nmwg="http://ggf.org/ns/nmwg/base/2.0/"
+              xmlns:nmwgt="http://ggf.org/ns/nmwg/topology/2.0/"
+              xmlns:psservice="http://ggf.org/ns/nmwg/tools/org/perfsonar/service/1.0/"
+              xmlns:netutil="http://ggf.org/ns/nmwg/characteristic/utilization/2.0/">
+
+    <!-- Contains service description with accessPoint which will be the key in the database! -->
+ 
+    <nmwg:metadata id="serviceLookupInfo">
+        <perfsonar:subject id="commonParameters"> 
+            <psservice:service id="serviceParameters"> 
+            </psservice:service>
+        </perfsonar:subject>
+    </nmwg:metadata>
+    <nmwg:data id="data" metadataIdRef="serviceLookupInfo">
+    </nmwg:data>
+    
+</nmwg:message>

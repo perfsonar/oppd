@@ -1,0 +1,8 @@
+<nmwg:message id="authNMessage1" type="AuthNEERequest" xmlns:nmwg="http://ggf.org/ns/nmwg/base/2.0/">
+               <nmwg:metadata id="authNMetadata">
+                   <nmwg:parameters id="keys">
+                       <nmwg:parameter name="SecurityToken"/>
+                   </nmwg:parameters>
+               </nmwg:metadata>
+               <nmwg:data id="authN1" metadataIdRef="authNMetadata"/>
+           </nmwg:message>

@@ -1,0 +1,31 @@
+Changelog for release 0.51
+
+ - changed package name to perfsonar-oppd
+ - added funtionality to save measurements to SQL MA
+ - fixed security bug in BWCTL module
+
+Changelog for release 0.50
+
+ - changed name to oppd (= open perl perfSONAR daemon)
+ - enhanced LS communication: Keepalive and Key Request
+   added, moved LS handling code from daemon to own
+   module
+
+
+Changelog for release 0.41
+
+New features:
+ - some bug fixes and better LS registration handling
+ - selftest funcitonality for status monitoring of service
+ - enhancement for logging to external syslog server
+
+
+Changelog for release 0.4
+
+New features:
+ - new and faster SOAP support
+ - better overall performance
+ - better chaining support
+ - AA registration
+ - parallel request pocessing
+ - new Config file format

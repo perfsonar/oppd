@@ -1,0 +1,7 @@
+This is a description of how to include source code in office documents.
+
+First step is to create nice RTF output using the tool "highlight":
+
+highlight --rtf -i INPUT.rnc -o OUTPUT.rtf
+
+In OpenOffice just insert via Insert->From File

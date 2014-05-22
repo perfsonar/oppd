@@ -1,0 +1,45 @@
+Perl perfSONAR package Installation and Usage Information
+=========================================================
+
+
+Requirements:
+-------------
+
+required Perl packets:
+  - SOAP-Lite, version 0.66
+  - Date-Calc
+  - XML-Writer
+  - ICP-Run
+  - IO-Pty
+
+
+Installation Steps:
+-------------------
+
+1. Untar perfSONAR package (if you have not already done so)
+2. Install all required Perl packets, for example as RPMs or via cpan shell
+3. Patch Lite.pm (from SOAP-Lite package) with contrib/SOAP-Lite-0.66-doclit.patch
+
+
+Usage:
+------
+
+Start service: 
+   bin/perfsonar.pl --help
+   bin/perfsonar.pl --port=8090 --detach --logfile=/home/labor/perfsonar.log --pidfile=/home/labor/perfsonar.pid --debug --verbose
+
+The MS is an interface for the following services:
+  - Hades MA:
+      install Hades package (...)
+      install perl packages: 
+          - Net-SSH-Perl
+          - Net-SFTP
+  - BWCTL MP:
+      install Iperf (http://dast.nlanr.net/Projects/Iperf/) and
+      BWCTL (http://e2epi.internet2.edu/bwctl/)
+  - OWAMP MP:
+      install owping (http://e2epi.internet2.edu/owamp/) 
+
+Contact:
+--------
+win-labor@dfn.de

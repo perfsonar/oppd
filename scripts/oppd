@@ -1,0 +1,122 @@
+#!/bin/bash
+#
+# Init file for oppd (Open Perl PerfSONAR Daemon)
+#
+# chkconfig: 2345 21 79
+# description: oppd (Open Perl PerfSONAR Daemon)
+#
+# processname: oppd
+# config: /etc/oppd.conf
+# pidfile: /var/run/oppd.pid
+
+PATH=$PATH:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+export PATH
+
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# Defaults for configuration options
+OPPD=/usr/bin/oppd.pl
+CONF_FILE=/etc/oppd.conf
+PID_FILE=/var/run/oppd.pid
+LOG_FILE=""
+USER=perfsonar
+GROUP=perfsonar
+OPTIONS=""
+
+# source sysconfig settings
+sysconfig=/etc/sysconfig/oppd
+[ -f $sysconfig ] && . $sysconfig
+
+# In order to help keeping the code from hades-analyzed.init,
+# hades-traceroute.init, and oppd.init in sync, we use the following
+# helper variables:
+PROG=$OPPD
+prog="oppd"
+
+# Check that the user exists (if we set a user)
+# Does the user exist?
+if [ -n "$USER" ] ; then
+  if getent passwd | grep -q "^$USER:"; then
+    # Obtain the uid and gid
+    USERUID=`getent passwd |grep "^$USER:" | awk -F : '{print $3}'`
+    USERGID=`getent passwd |grep "^$USER:" | awk -F : '{print $4}'`
+  else
+    echo "The user $USER, required to run $NAME does not exist." 1>&2
+    exit 1
+  fi
+fi
+
+RETVAL=0
+
+start()
+{
+  echo -n $"Starting $prog: "
+  touch "$PID_FILE"
+  chown $USER:$GROUP "$PID_FILE"
+  if [ -n "$LOG_FILE" ]
+  then
+    touch $LOG_FILE
+    chown $USER:$GROUP $LOG_FILE
+    OPTIONS="$OPTIONS --logfile=$LOG_FILE"
+  fi
+  daemon --user=$USER --pidfile="$PID_FILE" \
+    $PROG --config="$CONF_FILE" --pidfile="$PID_FILE" $OPTIONS \
+    && success || failure
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+  echo
+}
+
+stop()
+{
+  echo -n $"Stopping $prog: "
+  killproc -p "$PID_FILE" $PROG
+  RETVAL=$?
+  [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog
+  # Daemon should delete its pid file, but perhaps it doesn't have the right
+  # to do it!!
+  rm -f $PID_FILE
+  echo
+}
+
+reload()
+{
+  echo -n $"Reloading $prog: "
+  killproc -p "$PID_FILE" $PROG -HUP
+  RETVAL=$?
+  echo
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  reload)
+    reload
+    ;;
+  condrestart)
+    if [ -f /var/lock/subsys/$prog ] ; then
+      stop
+      start
+    fi
+    ;;
+  status)
+    status -p "$PID_FILE" $PROG
+      #TODO This will more or less show you all running processes with the
+      #     name $PROG! Is this a bug in /etc/rc.d/init.d/functions ?
+    RETVAL=$?
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|reload|condrestart|status}"
+    RETVAL=1
+esac
+exit $RETVAL

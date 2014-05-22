@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<nmwg:message type="LSDeregisterRequest"
+                   id="msg1"
+                   xmlns:nmwg="http://ggf.org/ns/nmwg/base/2.0/">
+ 
+    <nmwg:metadata id="key_to_remove">
+      <nmwg:key>
+          <nmwg:parameters id="keys">
+          </nmwg:parameters>
+      </nmwg:key>
+    </nmwg:metadata>
+ 
+    <nmwg:data metadataIdRef="key_to_remove" id="data"/> <!-- empty trigger -->
+ 
+</nmwg:message>
