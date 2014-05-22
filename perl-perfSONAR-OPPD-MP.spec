@@ -25,7 +25,7 @@ Group:			Development/Tools
 %description Shared
 Shared libraries used by the on-demand MP
 
-%package oppd
+%package server
 Summary:		MP perfSONAR daemon
 Group:			Development/Tools
 Requires:       perl-perfSONAR-OPPD-MP-Shared
@@ -34,11 +34,14 @@ Requires:       perl(HTTP::Daemon::SSL)
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 
+%description server
+Daemon that runs MP
+
 %package BWCTL
 Summary:		BWCTL MP
 Group:			Development/Tools
 Requires:       perl-perfSONAR-OPPD-MP-Shared
-Requires:       perl-perfSONAR-OPPD-MP-oppd
+Requires:       perl-perfSONAR-OPPD-MP-server
 Requires:	    bwctl >= 1.5
 
 %description BWCTL
@@ -48,7 +51,7 @@ Provides on-demand BWCTL measurements through a web interface
 Summary:		OWAMP MP
 Group:			Development/Tools
 Requires:       perl-perfSONAR-OPPD-MP-Shared
-Requires:       perl-perfSONAR-OPPD-MP-oppd
+Requires:       perl-perfSONAR-OPPD-MP-server
 Requires:       perl(IO::Tty) >= 1.02
 Requires:       perl(IPC::Run)
 Requires:	    owamp
@@ -56,24 +59,19 @@ Requires:	    owamp
 %description OWAMP
 Provides on-demand OWAMP measurements through a web interface
 
-%description oppd
-Daemon that runs MP
-
 %package WebAdmin
 Summary:		MP Web Interface
 Group:			Development/Tools
 Requires:       httpd
 Requires:	    mod_perl
 Requires:	    perl-suidperl
-Requires:	    perl-perfSONAR-OPPD-MP-oppd
-Requires:	    perl-perfSONAR-OPPD-MP-BWCTL
-Requires:	    perl-perfSONAR-OPPD-MP-OWAMP
+Requires:	    perl-perfSONAR-OPPD-MP-Shared
 Requires: 	    perl-Hash-Flatten
 
 %description WebAdmin
 Provides web page interface for ondemand measurements
 
-%pre oppd
+%pre server
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 
@@ -111,7 +109,7 @@ install etc/oppd-WebAdmin-apache.conf.redhat %{buildroot}/etc/httpd/conf.d/oppd-
 %clean
 rm -rf %{buildroot}
 
-%post oppd
+%post server
 /sbin/chkconfig --add oppd
 
 %post BWCTL
@@ -120,7 +118,7 @@ rm -rf %{buildroot}
 %post OWAMP
 /sbin/service oppd start > /dev/null 2>&1
 
-%preun oppd
+%preun server
 if [ "$1" = 0 ] ; then
 /sbin/chkconfig --del oppd
 /sbin/service oppd stop
@@ -169,7 +167,7 @@ exit 0
 %{install_base}/lib/perfSONAR/SOAP.pm
 %{install_base}/lib/perfSONAR/Selftest.pm
 
-%files oppd
+%files server
 %defattr(-,perfsonar,perfsonar,-)
 %doc %{install_base}/doc/*
 %attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd.pl
