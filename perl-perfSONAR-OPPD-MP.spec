@@ -59,18 +59,6 @@ Requires:	    owamp
 %description OWAMP
 Provides on-demand OWAMP measurements through a web interface
 
-%package WebAdmin
-Summary:		MP Web Interface
-Group:			Development/Tools
-Requires:       httpd
-Requires:	    mod_perl
-Requires:	    perl-suidperl
-Requires:	    perl-perfSONAR-OPPD-MP-Shared
-Requires: 	    perl-Hash-Flatten
-
-%description WebAdmin
-Provides web page interface for ondemand measurements
-
 %pre server
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
@@ -104,7 +92,6 @@ install -m 0755 scripts/oppd %{buildroot}/etc/init.d/oppd
 mkdir -p %{buildroot}/etc/sysconfig
 install -m 0644 etc/oppd.sysconfig %{buildroot}/etc/sysconfig/oppd
 mkdir -p %{buildroot}/etc/httpd/conf.d
-install etc/oppd-WebAdmin-apache.conf.redhat %{buildroot}/etc/httpd/conf.d/oppd-WebAdmin.conf
 
 %clean
 rm -rf %{buildroot}
@@ -187,12 +174,6 @@ exit 0
 %defattr(-,perfsonar,perfsonar,-)
 %config %{install_base}/etc/oppd.d/owamp.conf
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
-
-%files WebAdmin
-%defattr(-,perfsonar,perfsonar,-)
-%config %{install_base}/web/*
-%config /etc/httpd/conf.d/oppd-WebAdmin.conf
-%{install_base}/etc/oppd-WebAdmin-*
 
 %changelog
 *  Wed May 21 2014 andy@es.net 

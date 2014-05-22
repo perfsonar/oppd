@@ -6,7 +6,6 @@ doc/README
 doc/README-src2office
 doc/pod/oppd.conf.5.pod
 etc/oppd.conf
-etc/oppd-WebAdmin-apache.conf.redhat
 etc/oppd.d/Auth_request.xml
 etc/oppd.d/Auth_response.xml
 etc/oppd.d/LS_KeyRequest.xml
@@ -42,13 +41,3 @@ lib/perfSONAR/SOAP/HTTP/UserAgent.pm
 lib/perfSONAR/SOAP/Message.pm
 lib/perfSONAR/Selftest.pm
 scripts/oppd
-web/cgi-bin/WebAdminConfig.pm
-web/cgi-bin/finish.pl
-web/cgi-bin/logging.pl
-web/cgi-bin/restart.pl
-web/cgi-bin/restart_script.pl
-web/cgi-bin/service.pl
-web/cgi-bin/test.pl
-web/cgi-bin/wizard.pl
-web/index.html
-web/welcome.htm
