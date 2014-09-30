@@ -40,4 +40,5 @@ lib/perfSONAR/SOAP/HTTP/Response.pm
 lib/perfSONAR/SOAP/HTTP/UserAgent.pm
 lib/perfSONAR/SOAP/Message.pm
 lib/perfSONAR/Selftest.pm
+lib/perfSONAR/Tools.pm
 scripts/oppd

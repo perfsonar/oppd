@@ -2,6 +2,8 @@
 
 %define relnum 2 
 %define disttag pSPS
+%define oppdlogdir /var/log/perfsonar/
+%define oppdlogfile oppd.log
 
 Name:			perl-perfSONAR-OPPD-MP
 Version:		3.4
@@ -63,6 +65,14 @@ Provides on-demand OWAMP measurements through a web interface
 %pre server
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+if [ ! -d "%{oppdlogdir}" ]; then
+    mkdir -p %{oppdlogdir}
+fi
+if [ ! -f "%{oppdlogdir}%{oppdlogfile}" ]; then
+    touch %{oppdlogdir}%{oppdlogfile}
+    chown perfsonar:perfsonar %{oppdlogdir}%{oppdlogfile}
+fi
+exit 0
 
 %pre BWCTL
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
@@ -108,8 +118,12 @@ rm -rf %{buildroot}
 
 %preun server
 if [ "$1" = 0 ] ; then
-/sbin/chkconfig --del oppd
 /sbin/service oppd stop
+/sbin/chkconfig --del oppd
+fi
+if [ -f "%{oppdlogdir}%{oppdlogfile}" ]; then
+    rm -rf %{oppdlogdir}%{oppdlogfile}
+fi
 exit 0
 
 %preun BWCTL
@@ -154,6 +168,7 @@ exit 0
 %{install_base}/lib/perfSONAR/Request.pm
 %{install_base}/lib/perfSONAR/SOAP.pm
 %{install_base}/lib/perfSONAR/Selftest.pm
+%{install_base}/lib/perfSONAR/Tools.pm
 
 %files server
 %defattr(-,perfsonar,perfsonar,-)
@@ -177,5 +192,8 @@ exit 0
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
 
 %changelog
+*  Fri Sep 26 2014 hakan.calim@fau.de
+- Added creation of log file in /var/log/perfsonar/oppd.log.
+- Fix bug in preun of server.
 *  Wed May 21 2014 andy@es.net 
 - Combined packages into single spec file

@@ -41,6 +41,7 @@ our $VERSION = 1.0;
 use Log::Log4perl qw(get_logger);
 use base qw(perfSONAR::MP);
 use POSIX;
+use   perfSONAR::Tools;
 
 
 =head2 run()
@@ -76,8 +77,20 @@ sub createCommandLine{
     my $errormsg;
     my $ds = $self->{DS};
     
-    #$self->{LOGGER}->debug(Dumper(%parameters));
-            
+    #$self->{LOGGER}->info(Dumper(%parameters));
+    my $srcdst_swapped = 0;
+    my $srcislocal = perfSONAR::Tools->hostnameislocal($parameters{src});
+    my $dstislocal = perfSONAR::Tools->hostnameislocal($parameters{dst});
+    #$self->{LOGGER}->info(" Src is local: $srcislocal Dst is local: $dstislocal");
+    if ( $srcislocal == 0 && $ dstislocal == 1 ){
+        $self->{LOGGER}->info("Changin S option");
+        my $newsrc = $parameters{src};
+        my $newdst = $parameters{dst};
+        $parameters{src} = $newdst;
+        $parameters{dst} = $newsrc;
+        $srcdst_swapped = 1;
+    }
+       
     push @commandline, "-S" , $parameters{src} if($parameters{"src"});
     push @commandline, "-c" , $parameters{count} if $parameters{count};
     push @commandline, "-L" , $parameters{timeout} if $parameters{timeout};
@@ -132,12 +145,16 @@ sub createCommandLine{
     push @commandline, "-P", $parameters{portrange} if $parameters{portrange};
     
     push @commandline, "-a" if($parameters{"percentile"});
-    if($parameters{"one_way"} && ($parameters{"one_way"} eq "from")){
+    if ( $srcdst_swapped == 1){
         push @commandline, "-f";
-    }elsif($parameters{"one_way"} && ($parameters{"one_way"} eq "to")){
-        push @commandline, "-t";
     }else{
-        push @commandline, "-t";
+        if($parameters{"one_way"} && ($parameters{"one_way"} eq "from")){
+            push @commandline, "-f";
+        }elsif($parameters{"one_way"} && ($parameters{"one_way"} eq "to")){
+            push @commandline, "-t";
+        }else{
+            push @commandline, "-t";
+        }
     }
     
     #Append destination
@@ -194,6 +211,7 @@ sub parse_result {
     		if ($resultline =~
     		  #SEQNO STIME SSYNC SERR RTIME RSYNC RERR TTL\n
                 /(\d+)\s*(\d+)\s*(\d+)\s(.+)\s(\d+)\s(\d+)\s(.+)\s(\d+)/){
+                next if 0 == $5;
                 my %data_hash;
                 $data_hash{"sequenceNumber"} = $1;
                 $data_hash{"sendTime"} = $2;
