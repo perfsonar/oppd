@@ -202,7 +202,7 @@ if ($nologfile) {
     $logfile = undef;
   } elsif ($logfile eq "1" || $logfile eq "") {
     # logfile enabled in configuration file or via --logfile without value
-    $logfile = "/var/log/oppd.log";
+    $logfile = "/var/log/perfsonar/oppd.log";
   }
 }
 $nopidfile  = get_opt($nopidfile, 0); # No nopidfile entry in config file!
@@ -1167,7 +1167,7 @@ Configuration file: B<detach>
 Append messages to file F<LOGFILE>.
 
 Just use B<--logfile> without the optional value to enable logging to default
-log file F</var/log/oppd.log>.
+log file F</var/log/perfsonar/oppd.log>.
 
 You can use this option together with B<--syslog>.
 Messages will then be written to both, log file and system log.
