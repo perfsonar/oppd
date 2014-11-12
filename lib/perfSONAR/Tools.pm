@@ -19,6 +19,12 @@ package perfSONAR::Tools;
 use Socket qw(inet_ntoa);;
 use Log::Log4perl qw(get_logger);
 use Sys::Hostname::Long;
+use Net::DNS;
+
+#DEBUG
+#use Data::Dumper;
+##DEBUG
+
 
 =head1 NAME
 
@@ -60,17 +66,59 @@ sub getLocalInterfaces {
     return @ret_interfaces;
 }
 
-
-sub getallIPsbyhostname{
+sub getIPbyhostname{
     my ($self, $hostname) = @_;
-    my $packed_ip = gethostbyname("www.perl.org");
-    my $ip_address;
-   if (defined $packed_ip) {
-      $ip_address = inet_ntoa($packed_ip);
+    my $logger = get_logger(__PACKAGE__);
+    #$logger->info("Get host name: $hostname");
+
+    #Check hostname is cname
+    my $cname = $self->checkHostnameisCname($hostname);
+    #$logger->info("CNAME: $cname");
+    if (defined $cname){ 
+        $hostname = $cname;
     }
-    return $ip_address;
+
+    my $res   = Net::DNS::Resolver->new;
+    my $reply = $res->search($hostname);
+
+    if ($reply) {
+        foreach my $rr ($reply->answer) {
+            if ( $rr->type eq 'AAAA'){
+                return "ipv6", $rr->address; 
+            }elsif ( $rr->type eq "A"){
+                return "ipv4", $rr->address;
+            }
+        }
+    }
+    return;
 }
 
+sub checkHostnameisCname{
+    my ($self, $hostname) = @_;
+    my $logger = get_logger(__PACKAGE__);
+    my $res   = Net::DNS::Resolver->new;
+    my $reply = $res->search($hostname);
+
+    if ($reply) {
+        foreach my $rr ($reply->answer) {
+            if ('CNAME' eq $rr->type){
+                return $rr->cname;;
+            }
+        }
+    }
+    return undef;
+}
+
+sub checkIPisLocal{
+    my ($self, $ip) = @_;
+    my $logger = get_logger(__PACKAGE__);
+    my $islocal = 0;
+    my @localIps = $self->getLocalInterfaces();
+    if ( grep( /^$ip$/, @localIps ) ) {
+        $islocal = 1;
+    }
+    return $islocal;
+}
 
 sub hostnameislocal{
     my ($self, $hostname) = @_;

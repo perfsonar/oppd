@@ -48,6 +48,7 @@ use Carp;
 use perfSONAR::SOAP::Message;
 use perfSONAR::Request;
 use perfSONAR::SOAP::HTTP::Request;
+use perfSONAR::Tools;
 
 =head2 new({})
 
@@ -168,6 +169,21 @@ sub nmwg2ds{
     
     #do some checks on metadata content
     foreach my $meta (keys %{$ds->{REQUESTMSG}->{"metadataIDs"}}){
+        #$self->{LOGGER}->info(Dumper( $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"src"} ));
+        if ( $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"src"}{"type"} eq "hostname"){
+            my ($type,$address) = (perfSONAR::Tools->getIPbyhostname( $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"src"}{"value"}));
+            $self->{LOGGER}->warn("Source type hostname is deprecated. Set it to $type: $address.");
+            $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"src"}{"type"} = $type;
+            $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"src"}{"value"} = $address;
+        }
+        if ( $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"dst"}{"type"} eq "hostname"){
+            my ($type,$address) = (perfSONAR::Tools->getIPbyhostname( $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"dst"}{"value"}));
+            $self->{LOGGER}->warn("Destination type hostname is deprecated. Set it to $type: $address.");
+            $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"dst"}{"type"} = $type;
+            $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"dst"}{"value"} = $address;
+        }
+
+
         #check for unknown eventTypes
         my $et = $ds->{REQUESTMSG}->{"metadataIDs"}{$meta}{"eventType"};
         #$self->{LOGGER}->info("Eventype: $et");
@@ -474,14 +490,14 @@ sub parseResult{
 
     my $data = $$ds->{SERVICE}->{DATA};
     my $messagetype = $$ds->{REQUESTMSG}->get_message_type();
-     
+
     foreach my $id (keys %{$data}){
 	#Hades MA params occur
 	if ($$ds->{NMWG}->{HADES}->{$id}->{RESPARAMS}->{OCCURARRAY}){
             my $result_params = $$ds->{NMWG}->{HADES}->{$id}->{RESPARAMS}->{DATA};
             $$ds->{REQUESTMSG}->set_parameter_list(@$result_params);
         }
-		if ($$ds->{NMWG}->{HADES}->{$id}->{RESPARAMS}->{OCCURHASH}){
+	if ($$ds->{NMWG}->{HADES}->{$id}->{RESPARAMS}->{OCCURHASH}){
             my %result_params = %{$$ds->{NMWG}->{HADES}->{$id}->{RESPARAMS}->{DATA}};
             $result_params{metadataIdRef} = $self->{HADES}->{FILTER}{"metaID"};
             #$self->{LOGGER}->info(Dumper(%result_params));
@@ -567,35 +583,30 @@ sub store{
 	my ($self, $ds, $id, $store_by) = @_;
 	my $store_url = undef;
 	
-	#OWAMP store is acctually not supported
-	#if ($$ds->{SERVICE}->{NAME}  =~ /OWAMP/ ){
-	#	$$ds->{ERRORMSG} = "Store by OWAMP MP is actually not supported";
-        #return 0;
-	#}
 	if ($store_by eq "CONF"){
-		$store_url = $$ds->{SERVICES}->{$$ds->{SERVICE}->{NAME}}->{module_param}->{store_url};
-		
+		$store_url = $$ds->{SERVICES}->{$$ds->{SERVICE}->{NAME}}->{module_param}->{store_url};		
 	}
 	elsif ($store_by eq "META"){
 		$store_url = $$ds->{SERVICE}->{DATA}->{$id}->{STORE}->{PARAMS}->{uri};
 	}else{
-        $$ds->{ERRORMSG} = "This kind of store request is not supported";
-        return 0;
+            $$ds->{ERRORMSG} = "This kind of store request is not supported";
+            return 0;
 	}
 	
 	if (! $store_url){
-        $$ds->{ERRORMSG} = "No store url defined in configuration file";
-        return 0;
+            $$ds->{ERRORMSG} = "No store url defined in configuration file";
+            return 0;
     }
     $self->{LOGGER}->debug("Storing data to SQL MA: $store_url");
     my $store_msg = $$ds->{REQUESTMSG}->clone;
-    
     if (!$store_msg){
     	$$ds->{ERRORMSG} = "Store to MA failed: Could not clone storage message.";
         return 0;
     }
     
     $store_msg->set_message_type("MeasurementArchiveStoreRequest");
+    $store_msg->set_endPointPair; 
+    #$self->{LOGGER}->info( Dumper ($store_msg->as_string )); 
     my $request = perfSONAR::Request->new(
           message => $store_msg->clone,
           uri => $store_url,

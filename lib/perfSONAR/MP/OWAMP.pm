@@ -41,7 +41,7 @@ our $VERSION = 1.0;
 use Log::Log4perl qw(get_logger);
 use base qw(perfSONAR::MP);
 use POSIX;
-use   perfSONAR::Tools;
+use perfSONAR::Tools;
 
 
 =head2 run()
@@ -76,14 +76,17 @@ sub createCommandLine{
     my @commandline;
     my $errormsg;
     my $ds = $self->{DS};
+
+    #store parameters for this measurement
+    $self->{PARAMS} = \%parameters;
     
     #$self->{LOGGER}->info(Dumper(%parameters));
     my $srcdst_swapped = 0;
-    my $srcislocal = perfSONAR::Tools->hostnameislocal($parameters{src});
-    my $dstislocal = perfSONAR::Tools->hostnameislocal($parameters{dst});
+    my $srcislocal = perfSONAR::Tools->checkIPisLocal($parameters{src});
+    my $dstislocal = perfSONAR::Tools->checkIPisLocal($parameters{dst});
     #$self->{LOGGER}->info(" Src is local: $srcislocal Dst is local: $dstislocal");
-    if ( $srcislocal == 0 && $ dstislocal == 1 ){
-        $self->{LOGGER}->info("Changin S option");
+    if ( $srcislocal == 0 && $dstislocal == 1 ){
+        #$self->{LOGGER}->info("Changin S option");
         my $newsrc = $parameters{src};
         my $newdst = $parameters{dst};
         $parameters{src} = $newdst;
@@ -203,6 +206,7 @@ sub parse_result {
     my @result = split(/\n/, $result);
     my $time = time;
     my @datalines = ();
+    my $recTimeiszero = 0;
    
     #$self->{LOGGER}->info("@result");    
  
@@ -211,7 +215,10 @@ sub parse_result {
     		if ($resultline =~
     		  #SEQNO STIME SSYNC SERR RTIME RSYNC RERR TTL\n
                 /(\d+)\s*(\d+)\s*(\d+)\s(.+)\s(\d+)\s(\d+)\s(.+)\s(\d+)/){
-                next if 0 == $5;
+                if ( 0 == $5){  #this checks if receive time is 0 can occur on  firewalls
+                    $recTimeiszero++;
+                    next;
+                }
                 my %data_hash;
                 $data_hash{"sequenceNumber"} = $1;
                 $data_hash{"sendTime"} = $2;
@@ -352,10 +359,17 @@ sub parse_result {
 	} #End while ($count <
     }#elsif ($self->{OUTPUTTYPE} eq  "summary"
     #$self->{LOGGER}->info(Dumper(@datalines));
+    #$self->{LOGGER}->info( "packets failed: $recTimeiszero ");
     if($#datalines < 0){
-        #no data -> something wrong, write result as error description:
         $datalines[0]="OWAMP Error:";
-        push @datalines, @result;
+        #check if all packages not received on destination
+        my %params =  %{$self->{PARAMS}};
+        if ( $recTimeiszero == $params{count} ){
+             push @datalines, "Destination endpoint maybe blocked by firewall. No receive time available.";
+        }else{
+            #no data -> something wrong, write result as error description:
+            push @datalines, @result;
+        }
         
         my $errorstring = "@datalines";
         $$ds->{ERROROCCUR} = 1;

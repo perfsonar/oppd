@@ -34,6 +34,7 @@ Requires:       perl-perfSONAR-OPPD-MP-Shared
 Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
+Requires:	perl(Net::DNS)
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 

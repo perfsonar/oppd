@@ -116,7 +116,7 @@ sub clone {
 
 sub as_string {
   my $self = shift;
-  return $self->as_dom->toString(@_);
+  return $self->as_dom->toString();
     #TODO Just passing arguments is ugly and breaks separation NWMG<->LibXML
 }
 
@@ -137,6 +137,28 @@ sub set_message_type {
   my $type = shift;
   my $node = $self->{dom}->documentElement();
   return $node->setAttribute("type", $type);
+}
+
+sub set_endPointPair {
+  my $self = shift;
+  my  $ns = "http://ggf.org/ns/nmwg/topology/2.0/";
+  my $srcString = "src";
+  my $dstString = "dst";
+  foreach my $meta (keys %{$self->{"metadataIDs"}}){
+    $self->set_endPoint( $meta, $srcString);
+    $self->set_endPoint( $meta, $dstString);
+  }
+  return   1;
+}
+
+sub set_endPoint{
+  my $self = shift;
+  my ( $meta, $endpont ) = @_;
+  my  $ns = "http://ggf.org/ns/nmwg/topology/2.0/";
+
+  my @endpointElement = $self->{dom}->documentElement()->getElementsByTagNameNS( $ns, $endpont );
+  $endpointElement[0]->getAttributeNode("type")->setValue($self->{"metadataIDs"}{$meta}{$endpont}{"type"} );
+  $endpointElement[0]->getAttributeNode("value")->setValue($self->{"metadataIDs"}{$meta}{$endpont}{"value"} );
 }
 
 sub add_element {
