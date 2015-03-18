@@ -1,6 +1,6 @@
 # perfSONAR OPPD
 
-The Open Perl perfSONAR Daemon (OPPD)  is used to accept on-demand measurement requests via a web service. It supports tools such as BWCTL and OWAMP and is required by tools such as pSUI for users to request on-demand test. 
+The Open Perl perfSONAR Daemon (OPPD)  is used to accept on-demand measurement requests via a web service. It supports tools such as BWCTL and OWAMP and is required by tools such as pSUI for users to request on-demand tests. 
 
 
 ##Getting the Code
