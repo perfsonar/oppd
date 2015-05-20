@@ -1,0 +1,41 @@
+Source: perfsonar-oppd
+Section: misc
+Priority: extra
+Maintainer: Valentin Vidic <Valentin.Vidic@CARNet.hr>
+Build-Depends: debhelper (>= 9), dh-exec, quilt
+Standards-Version: 3.9.5
+Homepage: http://www.perfsonar.net
+Vcs-Git: https://github.com/perfsonar/oppd.git
+Vcs-Browser: https://github.com/perfsonar/oppd/tree/debian/wheezy
+
+Package: perfsonar-oppd-shared
+Architecture: all
+Depends: perfsonar-common, libdatetime-perl, libhttp-daemon-perl,
+ libhttp-message-perl, libipc-run-perl, liblog-log4perl-perl,
+ libwww-perl, libnet-dns-perl, libsocket6-perl, libsys-hostname-long-perl,
+ liburi-perl, libxml-libxml-perl, ${misc:Depends}
+Description: On-demand measurement point shared libraries
+ Shared libraries used by the on-demand measurement point.
+
+Package: perfsonar-oppd-server
+Architecture: all
+Depends: perfsonar-oppd-shared, ntp, lsb-base (>= 3.2-14),
+ libconfig-general-perl, liblog-log4perl-perl, libhttp-message-perl,
+ libhttp-daemon-ssl-perl, libsys-hostname-long-perl, liblog-dispatch-perl,
+ ${misc:Depends}
+Recommends: perfsonar-oppd-bwctl | perfsonar-oppd-owamp
+Description: On-demand measurement point daemon
+ Daemon that provides on-demand measurements through a web interface.
+
+Package: perfsonar-oppd-bwctl
+Architecture: all
+Depends: perfsonar-oppd-server, bwctl-client (>= 1.5), bwctl-server (>= 1.5),
+ ${misc:Depends}
+Description: On-demand measurement point BWCTL support
+ Provides on-demand BWCTL measurements through a web interface.
+
+Package: perfsonar-oppd-owamp
+Architecture: all
+Depends: perfsonar-oppd-server, owamp-client, owamp-server, ${misc:Depends}
+Description: On-demand measurement point OWAMP support
+ Provides on-demand OWAMP measurements through a web interface.

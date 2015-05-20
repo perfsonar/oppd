@@ -1,0 +1,2 @@
+etc/oppd.d/owamp.conf		/etc/perfsonar/oppd.d
+lib/perfSONAR/MP/OWAMP.pm	/usr/lib/perfsonar/lib/perfSONAR/MP

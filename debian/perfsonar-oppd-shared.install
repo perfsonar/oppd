@@ -1,0 +1,17 @@
+lib/NMWG.pm			/usr/lib/perfsonar/lib
+lib/NMWG/*			/usr/lib/perfsonar/lib/NMWG/
+lib/perfSONAR.pm		/usr/lib/perfsonar/lib
+lib/perfSONAR/AS.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Auth.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/DataStruct.pm	/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Echo.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/LS.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/MA.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/MP.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Request.pm	/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/SOAP.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Selftest.pm	/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Tools.pm		/usr/lib/perfsonar/lib/perfSONAR
+lib/perfSONAR/Client/*		/usr/lib/perfsonar/lib/perfSONAR/Client
+lib/perfSONAR/DataStruct/*	/usr/lib/perfsonar/lib/perfSONAR/DataStruct
+lib/perfSONAR/SOAP/*		/usr/lib/perfsonar/lib/perfSONAR/SOAP

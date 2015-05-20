@@ -1,0 +1,2 @@
+etc/oppd.d/bwctl.conf		/etc/perfsonar/oppd.d
+lib/perfSONAR/MP/BWCTL.pm	/usr/lib/perfsonar/lib/perfSONAR/MP

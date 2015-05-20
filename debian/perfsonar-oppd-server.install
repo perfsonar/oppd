@@ -1,0 +1,3 @@
+etc/oppd.conf		/etc/perfsonar
+etc/oppd.d/*.xml	/etc/perfsonar/oppd.d
+bin/oppd.pl		/usr/lib/perfsonar/bin
