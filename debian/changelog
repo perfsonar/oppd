@@ -1,5 +1,5 @@
-perfsonar-oppd (3.4-2) UNRELEASED; urgency=low
+perfsonar-oppd (3.4.2-1) unstable; urgency=low
 
   * Initial release.
 
- -- Valentin Vidic <Valentin.Vidic@CARNet.hr>  Thu, 14 May 2015 13:10:06 +0200
+ -- Valentin Vidic <Valentin.Vidic@CARNet.hr>  Fri, 22 May 2015 11:40:27 +0000
