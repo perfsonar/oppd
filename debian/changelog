@@ -1,3 +1,9 @@
+perfsonar-oppd (3.4.3-1) UNRELEASED; urgency=low
+
+  * Documenting the now outdated XML LS configuration in oppd.conf
+
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Fri, 22 May 2015 12:00:02 +0000
+
 perfsonar-oppd (3.4.2-1) unstable; urgency=low
 
   * Initial release.
