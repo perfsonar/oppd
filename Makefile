@@ -1,7 +1,7 @@
 PACKAGE=perfSONAR-OPPD-MP
 ROOTPATH=/opt/perfsonar_ps/oppd_mp
 VERSION=3.5
-RELEASE=0.0.a1
+RELEASE=0.1.rc1
 
 default:
 	@echo No need to build the package. Just run \"make install\"
