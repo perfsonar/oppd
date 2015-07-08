@@ -1,4 +1,4 @@
-perfsonar-oppd (3.4.3-1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5~1.rc1-1) perfsonar-wheezy-staging; urgency=low
 
   * Documenting the now outdated XML LS configuration in oppd.conf
 

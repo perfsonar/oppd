@@ -1,12 +1,12 @@
 %define install_base /opt/perfsonar_ps/oppd_mp
 
-%define relnum 2 
+%define relnum 0.1.rc1 
 %define disttag pSPS
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd.log
 
 Name:			perl-perfSONAR-OPPD-MP
-Version:		3.4
+Version:		3.5
 Release:		%{relnum}.%{disttag}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE
