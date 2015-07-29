@@ -40,7 +40,7 @@ our $VERSION = 1.0;
 
 use Log::Log4perl qw(get_logger);
 use base qw(perfSONAR::MP);
-
+use  perfSONAR::Tools;
 
 =head2 run()
 
@@ -128,6 +128,13 @@ sub createCommandLine{
     }#End foreach my $param
     #End parameter check
     
+    #check what is the local interface
+    if ( perfSONAR::Tools->checkIPisLocal($parameters{src}) == 1){
+        $parameters{local_interface} = $parameters{src};
+    }elsif ( perfSONAR::Tools->checkIPisLocal($parameters{dst}) == 1){
+	$parameters{local_interface} = $parameters{dst};
+    }
+    
     #Now create Command
     push @commandline , "-s" , $parameters{"src"}; 
     push @commandline , "AE", "AESKEY" if($parameters{"login"});
@@ -141,6 +148,7 @@ sub createCommandLine{
     push @commandline , "-u" if ($parameters{"protocol"} && $parameters{"protocol"} =~ /^udp$/i);
     push @commandline , "-l", $parameters{bufferSize} if($parameters{"bufferSize"});
     push @commandline , "-b", $parameters{bandwidth} if($parameters{"bandwidth"});
+    push @commandline , "-B", $parameters{local_interface} if($parameters{"local_interface"});
     push @commandline , "-S", $parameters{TOS} if($parameters{"TOS"});
     
     return @commandline;   
