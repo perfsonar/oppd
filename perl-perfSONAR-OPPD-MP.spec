@@ -1,6 +1,6 @@
 %define install_base /opt/perfsonar_ps/oppd_mp
 
-%define relnum 0.2.rc1 
+%define relnum 0.3.rc2 
 %define disttag pSPS
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd.log
