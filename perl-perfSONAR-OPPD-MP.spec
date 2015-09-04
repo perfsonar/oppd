@@ -1,6 +1,6 @@
 %define install_base /opt/perfsonar_ps/oppd_mp
 
-%define relnum 0.1.rc1 
+%define relnum 0.3.rc2 
 %define disttag pSPS
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd.log
@@ -63,7 +63,26 @@ Requires:	    owamp
 %description OWAMP
 Provides on-demand OWAMP measurements through a web interface
 
+%pre Shared
+if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
+    echo " To avoid any  unnecessary warnings in the future, you need to remove this package manually with the command: "
+    echo "rpm -e --nodeps --nopreun perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch"
+    echo "After manual remove of the package start installation or upgrade again."
+    exit 1
+fi
+exit 0
+
 %pre server
+if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
+    echo " To avoid any  unnecessary warnings in the future, you need to remove this package manually with the command: "
+    echo "rpm -e --nodeps --nopreun perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch"
+    echo "After manual remove of the package start installation or upgrade again."
+    exit 1
+fi
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 if [ ! -d "%{oppdlogdir}" ]; then
@@ -76,6 +95,15 @@ fi
 exit 0
 
 %pre BWCTL
+if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
+    echo " To avoid any  unnecessary warnings in the future, you need to remove this package manually with the command: "
+    echo "rpm -e --nodeps --nopreun perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch"
+    echo "After manual remove of the package start installation or upgrade again."
+    exit 1
+fi
+
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 if [ "$1" = 0 ] ; then
@@ -84,6 +112,15 @@ fi
 exit 0
 
 %pre OWAMP
+if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
+    echo " To avoid any  unnecessary warnings in the future, you need to remove this package manually with the command: "
+    echo "rpm -e --nodeps --nopreun perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch"
+    echo "After manual remove of the package start installation or upgrade again."
+    exit 1
+fi
+
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 if [ "$1" = 0 ] ; then
