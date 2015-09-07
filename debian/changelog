@@ -1,9 +1,9 @@
-perfsonar-oppd (3.5~3.rc2-1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5~3.rc2-1) perfsonar-wheezy-staging; urgency=low
 
   * Documenting the now outdated XML LS configuration in oppd.conf
   * Support the bwctl -B flag for setting the local interface to either src or dst
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Fri, 04 Sep 2015 18:38:08 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Mon, 07 Sep 2015 18:30:55 +0000
 
 perfsonar-oppd (3.4.2-1) unstable; urgency=low
 
