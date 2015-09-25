@@ -72,6 +72,7 @@ use Log::Log4perl qw(:easy);
 # Modules for this daemon:
 use File::Spec;
 use Socket;
+use Net::INET6Glue::INET_is_INET6;
 use HTTP::Daemon;
 #use HTTP::Daemon::SSL qw(debug3);
 #$Net::SSLeay::trace = 2;
