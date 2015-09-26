@@ -1,6 +1,6 @@
 %define install_base /opt/perfsonar_ps/oppd_mp
 
-%define relnum 0.3.rc2 
+%define relnum 1 
 %define disttag pSPS
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd.log
@@ -35,7 +35,6 @@ Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
 Requires:	perl(Net::DNS)
-Requires:	perl(Net::INET6Glue)
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 
