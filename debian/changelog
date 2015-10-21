@@ -1,8 +1,8 @@
-perfsonar-oppd (3.5.0.1~0.1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5.0.1~0-1) UNRELEASED; urgency=low
 
   * Correcting IPv6 listening mode (fixes #6)
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 21 Oct 2015 18:07:25 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 21 Oct 2015 18:31:08 +0000
 
 perfsonar-oppd (3.5-1) perfsonar-wheezy-release; urgency=low
 
