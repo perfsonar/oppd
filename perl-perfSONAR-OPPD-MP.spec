@@ -1,12 +1,12 @@
 %define install_base /opt/perfsonar_ps/oppd_mp
 
-%define relnum 1 
+%define relnum 0.1
 %define disttag pSPS
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd.log
 
 Name:			perl-perfSONAR-OPPD-MP
-Version:		3.5
+Version:		3.5.0.1
 Release:		%{relnum}.%{disttag}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE
@@ -35,6 +35,7 @@ Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
 Requires:	perl(Net::DNS)
+Requires:	perl(Net::INET6Glue)
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 
