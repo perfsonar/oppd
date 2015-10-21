@@ -22,7 +22,7 @@ Architecture: all
 Depends: perfsonar-oppd-shared, ntp, lsb-base (>= 3.2-14),
  libconfig-general-perl, liblog-log4perl-perl, libhttp-message-perl,
  libhttp-daemon-ssl-perl, libsys-hostname-long-perl, liblog-dispatch-perl,
- ${misc:Depends}
+ libnet-inet6glue-perl, ${misc:Depends}
 Recommends: perfsonar-oppd-bwctl | perfsonar-oppd-owamp
 Description: On-demand measurement point daemon
  Daemon that provides on-demand measurements through a web interface.
