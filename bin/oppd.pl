@@ -40,6 +40,7 @@ use warnings;
 use Data::Dumper;
 #DEBUG
 
+use Net::INET6Glue::INET_is_INET6;
 use FindBin;
 use lib "$FindBin::RealBin/../lib";
 
@@ -71,7 +72,7 @@ use Log::Log4perl qw(:easy);
 
 # Modules for this daemon:
 use File::Spec;
-use Socket;
+use Socket6;
 use HTTP::Daemon;
 #use HTTP::Daemon::SSL qw(debug3);
 #$Net::SSLeay::trace = 2;
@@ -670,11 +671,13 @@ while (1) {
     next;
   }
   my $peer_str = "UNKNOWN";
+  my $socket_addr_str = "UNKNOWN";
   if ($peer) {
-    my ($port, $iaddr) = sockaddr_in($peer);
-    $peer_str = inet_ntoa($iaddr) . ":" . $port;
+    #my ($port, $iaddr) = sockaddr_in($peer);
+    $socket_addr_str = $conn->sockhost();
+    $peer_str = $conn->peerhost() . ":" . $conn->peerport();
   }
-  $logger->info("Incoming connection from $peer_str");
+  $logger->info("Incoming connection on $socket_addr_str from $peer_str");
   if (scalar(keys %connections)+1 > $max_conn) {
     my $msg = "Too many connections";
     $logger->error("$msg - closing connection to $peer_str");
@@ -1012,6 +1015,8 @@ sub close_socket {
   die "Internal error: close_socket(): Not a valid socket!\n";
 }
 
+#Socket is ready...
+$logger->info("Peer successfully set.");
 
 #
 # Fork away the child process for LS registration.
