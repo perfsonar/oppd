@@ -150,6 +150,8 @@ sub createCommandLine{
     push @commandline , "-b", $parameters{bandwidth} if($parameters{"bandwidth"});
     push @commandline , "-B", $parameters{local_interface} if($parameters{"local_interface"});
     push @commandline , "-S", $parameters{TOS} if($parameters{"TOS"});
+    push @commandline , "-T", $parameters{tool} ? $parameters{"tool"} : "iperf3";
+
     
     return @commandline;   
     
@@ -172,14 +174,19 @@ sub parse_result {
   my @result = split(/\n/, $result);
   my @datalines;
   my $time = time;
-  
+  my $linetype = "data";
   
   foreach my $resultline (@result){
     next unless  ($resultline =~
-        /(\d+\.\d+\s*\-\s*\d+\.\d+)\s+sec\s+(\d+\.?\d*)\s+(\w+)\s+(\d+\.?\d*)\s+(\w+\/\w+)/);
+	#iperf3 header: 
+	#[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+	#[ 15]   0.00-6.00   sec   136 MBytes   189 Mbits/sec    0   1.62 MBytes       
+        /(\d+\.\d+\s*\-\s*\d+\.\d+)\s+sec\s+(\d+\.?\d*)\s+(\w+)\s+(\d+\.?\d*)\s+(\w+\/\w+)\s*(\d*)\s*(\d*\.?\d*)\s*(\w*)/);
 
     my %data_hash;
-    
+    $linetype = "summary" if ($8 eq "sender" || $8 eq "receiver");
+
+    $data_hash{"lineType"} = $linetype;    
     $data_hash{"timeType"} = "unix";
     $data_hash{"timeValue"} = $time;
     $data_hash{"interval"} = $1;
@@ -187,8 +194,13 @@ sub parse_result {
     $data_hash{"numBytesUnits"} = $3;
     $data_hash{"value"} = $4;
     $data_hash{"valueUnits"} = $5;
+    $data_hash{"retransmits"} = $6 if $6 >= 0;
+    $data_hash{"sndcwdValue"} = $7 if $linetype eq "data";
+    $data_hash{"sndcwdType"} = $8 if $linetype eq "data";
+    $data_hash{"nodeType"} = $8 if $linetype eq "summary";
     push @datalines, \%data_hash;
   }
+  $self->{LOGGER}->info(Dumper(@datalines));
   if($#datalines < 0){
     #no data -> something wrong, write result as error description:
     $datalines[0]="BWCTL Error:";
