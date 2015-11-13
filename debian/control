@@ -2,7 +2,7 @@ Source: perfsonar-oppd
 Section: misc
 Priority: extra
 Maintainer: Valentin Vidic <Valentin.Vidic@CARNet.hr>
-Build-Depends: debhelper (>= 9), dh-exec, quilt
+Build-Depends: debhelper (>= 9), dh-exec, dh-systemd, quilt
 Standards-Version: 3.9.5
 Homepage: http://www.perfsonar.net
 Vcs-Git: https://github.com/perfsonar/oppd.git

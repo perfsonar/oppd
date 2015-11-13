@@ -1,0 +1,17 @@
+[Unit]
+Description=Open Perl PerfSONAR Daemon
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/perfsonar-oppd-server.pid
+ExecStartPre=/usr/bin/touch /var/run/perfsonar-oppd-server.pid
+ExecStartPre=/bin/chown perfsonar:perfsonar /var/run/perfsonar-oppd-server.pid
+User=perfsonar
+Group=perfsonar
+PermissionsStartOnly=true
+ExecStart=/usr/lib/perfsonar/bin/oppd.pl --config=/etc/perfsonar/oppd.conf --pidfile=/var/run/perfsonar-oppd-server.pid --logfile=/var/log/perfsonar/oppd.log
+ExecStopPost=/bin/rm -f /var/run/perfsonar-oppd-server.pid
+
+[Install]
+WantedBy=multi-user.target
