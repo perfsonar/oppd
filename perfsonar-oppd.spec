@@ -26,8 +26,8 @@ Executes on-demand measurements through a web interface
 %package shared
 Summary:        MP Shared libs
 Group:          Development/Tools
-Obsoletes:      perl-perfSONAR-OPPD-Shared
-Provides:       perl-perfSONAR-OPPD-Shared
+Obsoletes:      perl-perfSONAR-OPPD-MP-Shared
+Provides:       perl-perfSONAR-OPPD-MP-Shared
 
 %description shared
 Shared libraries used by the on-demand MP
