@@ -157,7 +157,7 @@ rm -rf %{buildroot}/%{install_base}/scripts/
 
 mkdir -p %{buildroot}/etc/sysconfig
 install -m 0644 etc/oppd-server.sysconfig %{buildroot}/etc/sysconfig/oppd-server
-rm -f %{buildroot}/%{install_base}/etc/oppd-server.sysconfig
+rm -f %{buildroot}/%{config_base}/oppd-server.sysconfig
 
 mkdir -p %{buildroot}/etc/httpd/conf.d
 
