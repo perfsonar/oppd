@@ -141,7 +141,7 @@ fi
 exit 0
 
 %prep
-%setup -q -n perfSONAR-OPPD-MP-%{version}.%{relnum}
+%setup -q -n perfsonar-oppd-%{version}.%{relnum}
 
 %build
 
