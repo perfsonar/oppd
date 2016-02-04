@@ -46,6 +46,7 @@ use perfSONAR::Tools;
 
 =head2 run()
 
+
 The run method starts a OWAMP measurement and use the runMeasurement()
 method from perfSONAR::MP. To start the measurement a data struct as 
 input is needed. For example to start a OWAMP measurement:
@@ -59,6 +60,9 @@ sub run{
     my ($self, $ds) = @_;
     $self->{LOGGER} = get_logger(__PACKAGE__);
     $self->{DS} = $ds;
+    my $filters = new perfSONAR_PS::Client::Esmond::ApiFilters();
+
+    
     $self->runMeasurement();
 }
 
@@ -93,6 +97,15 @@ sub createCommandLine{
         $parameters{dst} = $newsrc;
         $srcdst_swapped = 1;
     }
+
+    #ESMOND info
+    $self->{ESMOND}{subject_type} =  "point-to-point";
+    $self->{ESMOND}{source} =  $parameters{src};
+    $self->{ESMOND}{destination} =  $parameters{dst};
+    $self->{ESMOND}{measurement_agent} =  $parameters{src};
+    if (defined  $parameters{"tool"} ) { $self->{ESMOND}{tool_name} = "bwctl/$parameters{tool}" }  else { $self->{ESMOND}{tool_name} = "bwctl/owping" };
+    if (defined  $parameters{"bucket_width"} ) { $self->{ESMOND}{sample_bucket_width} = $parameters{bucket_width} }  else { $self->{ESMOND}{sample_bucket_width} = "0.0001" };
+    $self->{ESMOND}{ip_transport_protocol} = "udp";
        
     push @commandline, "-S" , $parameters{src} if($parameters{"src"});
     push @commandline, "-c" , $parameters{count} if $parameters{count};
@@ -431,6 +444,13 @@ sub parseOWAMPTime{
 	my $isoTS = $dt->day_abbr ." ". $dt->month_abbr . " ". $dt->day ." ". $dt->hms ."." . $msec ." UTC " . $dt->year;
 	return $isoTS;
 
+}
+
+sub set_metadata_service{
+    my $self = shift;
+    if ($self->set_metadata_owamp_mp($self->{ESMOND})){
+        $self->store_measuremt_data_owamp_mp();
+    }
 }
 
 1;

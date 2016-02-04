@@ -50,6 +50,7 @@ use IPC::Run qw( run timeout start finish pump);
 #use IO::Pty;
 use POSIX ":sys_wait_h";
 use DateTime;
+use base qw(perfSONAR::Esmond::Client);
 use base qw(perfSONAR::Echo);
 use base qw(perfSONAR::Selftest);
 
@@ -118,6 +119,7 @@ sub new{
     	}
     }
     $self->{MODPARAM} = \%module_param;
+    $self->{ESMONDCLIENT} = new perfSONAR::Esmond::Client 
     bless $self, $class;
     return $self;
 }
@@ -205,7 +207,6 @@ sub runMeasurement{
         #$self->{LOGGER}->info(Dumper(@mresult));
         $$ds->{SERVICE}->{DATA}->{$id}->{MRESULT} = \@mresult;
         $$ds->{SERVICE}->{DATA}->{$id}->{OUTPUTTYPE} = $self->{OUTPUTTYPE};
-        #$logger->info(Dumper(@mresult));        
 	}#End foreach my $id
 		
 	#On success write to log
@@ -214,8 +215,31 @@ sub runMeasurement{
 	}
 	else{
 		$logger->info("The measurement was successfull for service: $$ds->{SERVICE}->{NAME}");
+		$self->store_result();
 	}
 	   
+}
+
+sub store_result{
+    my $self = shift;
+
+    #Get store parameters
+    my %esmond_params =  (
+			url =>  $self->{MODPARAM}->{esmond_url},
+			username => $self->{MODPARAM}->{esmond_auth_username},
+			apikey => $self->{MODPARAM}->{esmond_auth_apikey},
+			ca_file => $self->{MODPARAM}->{esmond_ca_certificate_file},
+			store => $self->{MODPARAM}->{esmond_store},
+			);
+
+    if ( ! $esmond_params{store} ){
+       return; #esmond storage not active
+    }
+
+    $self->connect_storage(\%esmond_params);
+    $self->set_metadata_general($self->{ESMOND});
+    $self->set_metadata_service();
+
 }
 
 1;

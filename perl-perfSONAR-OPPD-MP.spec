@@ -36,6 +36,7 @@ Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
 Requires:	perl(Net::DNS)
 Requires:	perl(Net::INET6Glue)
+Requires:       perl(perfSONAR_PS:Toolkit:Library)
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 
