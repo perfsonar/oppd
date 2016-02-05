@@ -15,10 +15,10 @@ DESC="Open Perl PerfSONAR Daemon"
 NAME=perfsonar-oppd-server
 SCRIPTNAME=/etc/init.d/$NAME
 
-CONFFILE=/etc/perfsonar/oppd.conf
+CONFFILE=/etc/perfsonar/oppd-server.conf
 PIDFILE=/var/run/$NAME.pid
-LOGFILE=/var/log/perfsonar/oppd.log
-DAEMON=/usr/lib/perfsonar/bin/oppd.pl
+LOGFILE=/var/log/perfsonar/oppd-server.log
+DAEMON=/usr/lib/perfsonar/bin/oppd-server.pl
 DAEMON_ARGS="--config=$CONFFILE --pidfile=$PIDFILE --logfile=$LOGFILE"
 
 USER=perfsonar
