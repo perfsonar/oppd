@@ -1,13 +1,13 @@
 # Path to oppd.
-OPPD=/opt/perfsonar_ps/oppd_mp/bin/oppd.pl
+OPPD=/usr/lib/perfsonar/bin/oppd-server.pl
 
 # Configuration file to be used by oppd.
-CONF_FILE=/opt/perfsonar_ps/oppd_mp/etc/oppd.conf
+CONF_FILE=/etc/perfsonar/oppd-server.conf
 
 # pid file to use. The init script overwrites the pid file used (from
 # configuration file or default) to make sure that the init script can control
 # the daemon via the pid file. Therefore you can change the pid file ONLY here!
-#PID_FILE=/var/run/oppd.pid
+#PID_FILE=/var/run/oppd-server.pid
 
 # log file to use. If you set a log file here, it will not only be set as the
 # log file used by the daemon (overriding value from configuration file). The
