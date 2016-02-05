@@ -24,7 +24,7 @@ override_dh_auto_install:
 
 override_dh_install:
 	dh_install
-	chmod +x $(CURDIR)/debian/perfsonar-oppd-server/usr/lib/perfsonar/bin/oppd.pl
+	chmod +x $(CURDIR)/debian/perfsonar-oppd-server/usr/lib/perfsonar/bin/oppd-server.pl
 
 override_dh_installinit:
 	dh_installinit --no-start
