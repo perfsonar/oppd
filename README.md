@@ -31,19 +31,19 @@ make dist
 To start the service run:
 
 ```bash
-/etc/init.d/oppd start
+/etc/init.d/oppd-server start
 ```
 
 To stop the service run:
 
 ```bash
-/etc/init.d/oppd stop
+/etc/init.d/oppd-server stop
 ```
 
 To restart the service run:
 
 ```bash
-/etc/init.d/oppd restart
+/etc/init.d/oppd-server restart
 ```
 
 ##Using the *shared* Submodule
