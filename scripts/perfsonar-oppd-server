@@ -17,23 +17,23 @@ export PATH
 . /etc/rc.d/init.d/functions
 
 # Defaults for configuration options
-OPPD=/usr/bin/oppd.pl
-CONF_FILE=/etc/oppd.conf
-PID_FILE=/var/run/oppd.pid
+OPPD=/usr/lib/perfsonar/bin/oppd-server.pl
+CONF_FILE=/etc/perfsonar/oppd-server.conf
+PID_FILE=/var/run/oppd-server.pid
 LOG_FILE=""
 USER=perfsonar
 GROUP=perfsonar
 OPTIONS=""
 
 # source sysconfig settings
-sysconfig=/etc/sysconfig/oppd
+sysconfig=/etc/sysconfig/oppd-server
 [ -f $sysconfig ] && . $sysconfig
 
 # In order to help keeping the code from hades-analyzed.init,
 # hades-traceroute.init, and oppd.init in sync, we use the following
 # helper variables:
 PROG=$OPPD
-prog="oppd"
+prog="oppd-server"
 
 # Check that the user exists (if we set a user)
 # Does the user exist?

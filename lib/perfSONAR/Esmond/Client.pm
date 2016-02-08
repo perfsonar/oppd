@@ -11,7 +11,14 @@ This class includes all methods for storing measurement data in a Esmond storage
 use strict;
 use warnings;
 
+#DEBUG
+use Data::Dumper;
+##DEBUG
+
+
 use Log::Log4perl qw(get_logger);
+use JSON;
+use Scalar::Util qw(reftype);
 use FindBin;
 use lib "$FindBin::RealBin/../../toolkit/lib/";
 use perfSONAR_PS::Client::Esmond::ApiFilters;
@@ -190,18 +197,19 @@ sub store_measuremt_data_owamp_mp{
     my $ds = $self->{DS};
     my $datalines_ref = $$ds->{SERVICE}->{DATA}->{1}->{MRESULT};
     my $bulk_post = $self->{METADATA}->generate_event_type_bulk_post();
-    my $ts;
+    my $ts = time;
 
     foreach(@$datalines_ref){
-        #$self->{LOGGER}->info(Dumper($_));
-        my $ts = time;
-        $bulk_post->add_data_point('histogram-owdelay', $ts, { $_->{min_delay} => 30, $_->{med_delay} => 30, $_->{mdx_delay} => 40});
-        $bulk_post->add_data_point('packet-loss-rate', $ts, {'numerator'=> $_->{loss}, 'denominator'=> $_->{sent}});
-        $bulk_post->add_data_point('histogram-ttl', $ts, { $_->{hops} => $_->{sent} });
-        $bulk_post->add_data_point('packet-count-lost', $ts, $_->{loss});
-        $bulk_post->add_data_point('packet-count-sent', $ts, $_->{sent});
-        $bulk_post->add_data_point('packet-duplicates', $ts, $_->{duplicates});
-        $bulk_post->add_data_point('time-error-estimates', $ts, $_->{maxError});
+        #$self->{LOGGER}->info(Dumper($self->get_histogram_owdelay($_)));
+        $bulk_post->add_data_point('histogram-owdelay', $ts, $self->get_histogram_owdelay($_));
+        #$bulk_post->add_data_point('packet-loss-rate', $ts, {'numerator'=> $_->{loss}, 'denominator'=> $_->{sent}});
+        my %ttls = ();
+        %ttls = %{ $_->{TTLBUCKETS} } if $_->{TTLBUCKETS};
+        $bulk_post->add_data_point('histogram-ttl', $ts, \%ttls);
+        $bulk_post->add_data_point('packet-count-lost', $ts, $_->{LOST});
+        $bulk_post->add_data_point('packet-count-sent', $ts, $_->{SENT});
+        $bulk_post->add_data_point('packet-duplicates', $ts, $_->{DUPS});
+        $bulk_post->add_data_point('time-error-estimates', $ts, $_->{MAXERR});
         $bulk_post->post_data();
     
         if($bulk_post->error()){
@@ -232,5 +240,14 @@ sub get_start_duration{
     $start = $1;
     $end  = $2;
     return $start, $end - $start;
+}
+
+sub get_histogram_owdelay{
+    my ($self, $summary) = @_;
+    my %delays = ();
+    foreach my $bucket (keys %{ $summary->{BUCKETS} }) {
+       $delays{$bucket * $summary->{BUCKET_WIDTH} * 1000.0} = $summary->{BUCKETS}->{$bucket};
+    }
+    return \%delays;
 }
 1;

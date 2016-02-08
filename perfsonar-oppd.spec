@@ -1,18 +1,21 @@
-%define install_base /opt/perfsonar_ps/oppd_mp
+%define install_base /usr/lib/perfsonar/
+%define config_base  /etc/perfsonar
 
-%define relnum 0.1
-%define disttag pSPS
+# init scripts must be located in the 'scripts' directory
+%define init_script_1 perfsonar-oppd-server
 %define oppdlogdir /var/log/perfsonar/
-%define oppdlogfile oppd.log
+%define oppdlogfile oppd-server.log
 
-Name:			perl-perfSONAR-OPPD-MP
-Version:		3.5.0.1
-Release:		%{relnum}.%{disttag}
+%define relnum 0.0.a1
+
+Name:			perfsonar-oppd
+Version:		3.5.1
+Release:		%{relnum}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE
 Group:			Development/Libraries
 URL:			http://www.perfsonar.net/
-Source0:		perfSONAR-OPPD-MP-%{version}.%{relnum}.tar.gz
+Source0:		perfsonar-oppd-%{version}.%{relnum}.tar.gz
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:		noarch
 Requires:		perl
@@ -20,52 +23,65 @@ Requires:		perl
 %description
 Executes on-demand measurements through a web interface
 
-%package Shared
-Summary:		MP Shared libs
-Group:			Development/Tools
+%package shared
+Summary:        MP Shared libs
+Group:          Development/Tools
+Obsoletes:      perl-perfSONAR-OPPD-MP-Shared
+Provides:       perl-perfSONAR-OPPD-MP-Shared
 
-%description Shared
+%description shared
 Shared libraries used by the on-demand MP
 
 %package server
 Summary:		MP perfSONAR daemon
 Group:			Development/Tools
-Requires:       perl-perfSONAR-OPPD-MP-Shared
+Requires:       perfsonar-oppd-shared
 Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
+<<<<<<< HEAD:perl-perfSONAR-OPPD-MP.spec
 Requires:	perl(Net::DNS)
 Requires:	perl(Net::INET6Glue)
 Requires:       perl(perfSONAR_PS:Toolkit:Library)
+=======
+Requires:       perl(Net::DNS)
+Requires:       perl(Net::INET6Glue)
+>>>>>>> 755fbe176d9f437332351361dcc4f450d1ed8ff7:perfsonar-oppd.spec
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
+Obsoletes:      perl-perfSONAR-OPPD-MP-server
+Provides:       perl-perfSONAR-OPPD-MP-server
 
 %description server
 Daemon that runs MP
 
-%package BWCTL
+%package bwctl
 Summary:		BWCTL MP
 Group:			Development/Tools
-Requires:       perl-perfSONAR-OPPD-MP-Shared
-Requires:       perl-perfSONAR-OPPD-MP-server
+Requires:       perfsonar-oppd-shared
+Requires:       perfsonar-oppd-server
 Requires:	    bwctl >= 1.5
+Obsoletes:      perl-perfSONAR-OPPD-MP-BWCTL
+Provides:       perl-perfSONAR-OPPD-MP-BWCTL
 
-%description BWCTL
+%description bwctl
 Provides on-demand BWCTL measurements through a web interface
 
-%package OWAMP
+%package owamp
 Summary:		OWAMP MP
 Group:			Development/Tools
-Requires:       perl-perfSONAR-OPPD-MP-Shared
-Requires:       perl-perfSONAR-OPPD-MP-server
+Requires:       perfsonar-oppd-shared
+Requires:       perfsonar-oppd-server
 Requires:       perl(IO::Tty) >= 1.02
 Requires:       perl(IPC::Run)
 Requires:	    owamp
+Obsoletes:      perl-perfSONAR-OPPD-MP-OWAMP
+Provides:       perl-perfSONAR-OPPD-MP-OWAMP
 
-%description OWAMP
+%description owamp
 Provides on-demand OWAMP measurements through a web interface
 
-%pre Shared
+%pre shared
 if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
@@ -96,7 +112,7 @@ if [ ! -f "%{oppdlogdir}%{oppdlogfile}" ]; then
 fi
 exit 0
 
-%pre BWCTL
+%pre bwctl
 if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
@@ -109,11 +125,11 @@ fi
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 if [ "$1" = 0 ] ; then
-/sbin/service oppd stop > /dev/null 2>&1
+    /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
 exit 0
 
-%pre OWAMP
+%pre owamp
 if rpm -q --quiet perl-perfSONAR-OPPD-MP-server-3.4-1.pSPS.noarch; then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo "It seems you previously had the perl-perfSONAR-OPPD-MP-server-3.4-1 package installed which contains a small packaging problem."
@@ -126,71 +142,105 @@ fi
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
 if [ "$1" = 0 ] ; then
-/sbin/service oppd stop > /dev/null 2>&1
+/sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
 exit 0
 
 %prep
-%setup -q -n perfSONAR-OPPD-MP-%{version}.%{relnum}
+%setup -q -n perfsonar-oppd-%{version}.%{relnum}
 
 %build
 
 %install
 rm -rf %{buildroot}
-make ROOTPATH=%{buildroot}/%{install_base} rpminstall
+
+make ROOTPATH=%{buildroot}/%{install_base} CONFIGPATH=%{buildroot}/%{config_base} install
+
 mkdir -p %{buildroot}/etc/init.d
-install -m 0755 scripts/oppd %{buildroot}/etc/init.d/oppd
+
+install -D -m 0755 scripts/%{init_script_1} %{buildroot}/etc/init.d/%{init_script_1}
+rm -rf %{buildroot}/%{install_base}/scripts/
+
 mkdir -p %{buildroot}/etc/sysconfig
-install -m 0644 etc/oppd.sysconfig %{buildroot}/etc/sysconfig/oppd
+install -m 0644 etc/oppd-server.sysconfig %{buildroot}/etc/sysconfig/oppd-server
+rm -f %{buildroot}/%{config_base}/oppd-server.sysconfig
+
 mkdir -p %{buildroot}/etc/httpd/conf.d
 
 %clean
 rm -rf %{buildroot}
 
 %post server
-/sbin/chkconfig --add oppd
+/sbin/chkconfig --add perfsonar-oppd-server
+if [ "$1" = "1" ]; then
+     # clean install, check for pre 3.5.1 files
+    if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.conf" ]; then
+        mv %{config_base}/oppd-server.conf %{config_base}/oppd-server.conf.default
+        mv /opt/perfsonar_ps/oppd_mp/etc/oppd.conf %{config_base}/oppd-server.conf
+        sed -i "s:oppd\.d:oppd-server.d:g" %{config_base}/oppd-server.conf
+    fi
+    if [ -e "/etc/sysconfig/oppd" ]; then
+        mv -f /etc/sysconfig/oppd /etc/sysconfig/oppd-server
+        sed -i "s:/opt/perfsonar_ps/oppd_mp/bin/oppd.pl:/usr/lib/perfsonar/bin/oppd-server.pl:g" /etc/sysconfig/oppd-server
+        sed -i "s:/opt/perfsonar_ps/oppd_mp/etc/oppd.conf:/etc/perfsonar/oppd-server.conf:g" /etc/sysconfig/oppd-server
+    fi
+fi
 
-%post BWCTL
-/sbin/service oppd start > /dev/null 2>&1
+%post bwctl
+/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+if [ "$1" = "1" ]; then
+     # clean install, check for pre 3.5.1 files
+    if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/bwctl.conf" ]; then
+        mv %{config_base}/oppd-server.d/bwctl.conf %{config_base}/oppd-server.d/bwctl.conf.default
+        mv /opt/perfsonar_ps/oppd_mp/etc/oppd.d/bwctl.conf %{config_base}/oppd-server.d/bwctl.conf
+    fi
+fi
 
-%post OWAMP
-/sbin/service oppd start > /dev/null 2>&1
+%post owamp
+/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+if [ "$1" = "1" ]; then
+     # clean install, check for pre 3.5.1 files
+    if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/owamp.conf" ]; then
+        mv %{config_base}/oppd-server.d/owamp.conf %{config_base}/oppd-server.d/owamp.conf.default
+        mv /opt/perfsonar_ps/oppd_mp/etc/oppd.d/owamp.conf %{config_base}/oppd-server.d/owamp.conf
+    fi
+fi
 
 %preun server
 if [ "$1" = 0 ] ; then
-/sbin/service oppd stop
-/sbin/chkconfig --del oppd
+    /sbin/service perfsonar-oppd-server stop
+    /sbin/chkconfig --del perfsonar-oppd-server
 fi
 if [ -f "%{oppdlogdir}%{oppdlogfile}" ]; then
     rm -rf %{oppdlogdir}%{oppdlogfile}
 fi
 exit 0
 
-%preun BWCTL
+%preun bwctl
 if [ "$1" = 0 ] ; then
-/sbin/service oppd stop > /dev/null 2>&1
+    /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
 exit 0
 
-%preun OWAMP
+%preun owamp
 if [ "$1" = 0 ] ; then
-/sbin/service oppd stop > /dev/null 2>&1
+    /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
 exit 0
 
-%postun BWCTL
+%postun bwctl
 if [ "$1" -ge 1 ]; then
-/sbin/service oppd condrestart > /dev/null 2>&1
+    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
 exit 0
 
-%postun OWAMP
+%postun owamp
 if [ "$1" -ge 1 ]; then
-/sbin/service oppd condrestart > /dev/null 2>&1
+    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
 exit 0
 
-%files Shared
+%files shared
 %defattr(-,perfsonar,perfsonar,-)
 %{install_base}/lib/NMWG/*
 %{install_base}/lib/NMWG.pm
@@ -212,23 +262,20 @@ exit 0
 
 %files server
 %defattr(-,perfsonar,perfsonar,-)
-%doc %{install_base}/doc/*
-%attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd.pl
-%{install_base}/scripts/oppd
-%config /etc/init.d/oppd
-%config %{install_base}/etc/oppd.conf
-%config %{install_base}/etc/oppd.sysconfig
-%config %{install_base}/etc/oppd.d/*.xml
-%config /etc/sysconfig/oppd
+%attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd-server.pl
+%config /etc/init.d/perfsonar-oppd-server
+%config %{config_base}/oppd-server.conf
+%config %{config_base}/oppd-server.d/*.xml
+%config /etc/sysconfig/oppd-server
 
-%files BWCTL
+%files bwctl
 %defattr(-,perfsonar,perfsonar,-)
-%config %{install_base}/etc/oppd.d/bwctl.conf
+%config %{config_base}/oppd-server.d/bwctl.conf
 %{install_base}/lib/perfSONAR/MP/BWCTL.pm
 
-%files OWAMP
+%files owamp
 %defattr(-,perfsonar,perfsonar,-)
-%config %{install_base}/etc/oppd.d/owamp.conf
+%config %{config_base}/oppd-server.d/owamp.conf
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
 
 %changelog
