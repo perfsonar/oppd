@@ -73,7 +73,7 @@ sub createCommandLine{
     my ($self,%parameters) = @_;
     my @commandline;
     my $errormsg;
-        
+    
     unless ($parameters{"src"} || $parameters{"dst"}) {
         $errormsg = "Neither source nor destination ip address specified.";
         $self->{LOGGER}->error($errormsg);
@@ -135,6 +135,15 @@ sub createCommandLine{
 	$parameters{local_interface} = $parameters{dst};
     }
     
+    #we need info for Esmond
+    $self->{ESMOND}{subject_type} =  "point-to-point";
+    $self->{ESMOND}{source} =  $parameters{src};
+    $self->{ESMOND}{destination} =  $parameters{dst};
+    $self->{ESMOND}{measurement_agent} =  $parameters{local_interface};
+    if (defined  $parameters{"tool"} ) { $self->{ESMOND}{tool_name} = "bwctl/$parameters{tool}" }  else { $self->{ESMOND}{tool_name} = "bwctl/iperf3" };
+    $self->{ESMOND}{interval} = $parameters{interval} if($parameters{"interval"});
+    $self->{ESMOND}{duration} = $parameters{"duration"} if($parameters{"duration"});
+
     #Now create Command
     push @commandline , "-s" , $parameters{"src"}; 
     push @commandline , "AE", "AESKEY" if($parameters{"login"});
@@ -151,6 +160,7 @@ sub createCommandLine{
     push @commandline , "-B", $parameters{local_interface} if($parameters{"local_interface"});
     push @commandline , "-S", $parameters{TOS} if($parameters{"TOS"});
     push @commandline , "-T", $parameters{tool} ? $parameters{"tool"} : "iperf3";
+    push @commandline, "-f","k"; #Need more details for storing.
 
     
     return @commandline;   
@@ -200,7 +210,7 @@ sub parse_result {
     $data_hash{"nodeType"} = $8 if $linetype eq "summary";
     push @datalines, \%data_hash;
   }
-  $self->{LOGGER}->info(Dumper(@datalines));
+  #$self->{LOGGER}->info(Dumper(@datalines));
   if($#datalines < 0){
     #no data -> something wrong, write result as error description:
     $datalines[0]="BWCTL Error:";
@@ -234,6 +244,14 @@ sub selftest{
 		$$ds->{SERVICE}->{DATA}->{$id}->{MRESULT} = \@datalines
 	}#End foreach
 	return;
+}
+
+sub set_metadata_service{
+    my $self = shift;
+    if ($self->set_metadata_bwctl_mp($self->{ESMOND})){
+        $self->store_measuremt_data_bwctl_mp();
+    }    
+
 }
 
 1;

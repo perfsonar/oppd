@@ -14,4 +14,5 @@ lib/perfSONAR/Selftest.pm	/usr/lib/perfsonar/lib/perfSONAR
 lib/perfSONAR/Tools.pm		/usr/lib/perfsonar/lib/perfSONAR
 lib/perfSONAR/Client/*		/usr/lib/perfsonar/lib/perfSONAR/Client
 lib/perfSONAR/DataStruct/*	/usr/lib/perfsonar/lib/perfSONAR/DataStruct
+lib/perfSONAR/Esmond/*		/usr/lib/perfsonar/lib/perfSONAR/Esmond
 lib/perfSONAR/SOAP/*		/usr/lib/perfsonar/lib/perfSONAR/SOAP
