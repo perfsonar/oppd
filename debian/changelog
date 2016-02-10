@@ -1,17 +1,12 @@
 perfsonar-oppd (3.5.1~2.a1-1) UNRELEASED; urgency=low
 
   * Port to Jessie.
+  * Correcting IPv6 listening mode (fixes #6)
   * Renaming files to oppd-server.
   * Adding esmond storage support for perfsonar-oppd-bwctl.
   * Adding esmond storage support for perfsonar-oppd-owamp.
 
  -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 10 Feb 2016 20:20:56 +0000
-
-perfsonar-oppd (3.5.0.1~0-1) UNRELEASED; urgency=low
-
-  * Correcting IPv6 listening mode (fixes #6)
-
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 21 Oct 2015 18:31:08 +0000
 
 perfsonar-oppd (3.5-1) perfsonar-wheezy-release; urgency=low
 
