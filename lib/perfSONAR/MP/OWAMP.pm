@@ -43,8 +43,10 @@ use base qw(perfSONAR::MP);
 use POSIX;
 use perfSONAR::Tools;
 
+my $scale = 2**32;
 
 =head2 run()
+
 
 The run method starts a OWAMP measurement and use the runMeasurement()
 method from perfSONAR::MP. To start the measurement a data struct as 
@@ -59,6 +61,7 @@ sub run{
     my ($self, $ds) = @_;
     $self->{LOGGER} = get_logger(__PACKAGE__);
     $self->{DS} = $ds;
+    
     $self->runMeasurement();
 }
 
@@ -93,6 +96,15 @@ sub createCommandLine{
         $parameters{dst} = $newsrc;
         $srcdst_swapped = 1;
     }
+
+    #ESMOND info
+    $self->{ESMOND}{subject_type} =  "point-to-point";
+    $self->{ESMOND}{source} =  $parameters{src};
+    $self->{ESMOND}{destination} =  $parameters{dst};
+    $self->{ESMOND}{measurement_agent} =  $parameters{src};
+    if (defined  $parameters{"tool"} ) { $self->{ESMOND}{tool_name} = "bwctl/$parameters{tool}" }  else { $self->{ESMOND}{tool_name} = "bwctl/owping" };
+    if (defined  $parameters{"bucket_width"} ) { $self->{ESMOND}{sample_bucket_width} = $parameters{bucket_width} }  else { $self->{ESMOND}{sample_bucket_width} = "0.0001" };
+    $self->{ESMOND}{ip_transport_protocol} = "udp";
        
     push @commandline, "-S" , $parameters{src} if($parameters{"src"});
     push @commandline, "-c" , $parameters{count} if $parameters{count};
@@ -148,15 +160,34 @@ sub createCommandLine{
     push @commandline, "-P", $parameters{portrange} if $parameters{portrange};
     
     push @commandline, "-a" if($parameters{"percentile"});
+    $self->get_owd_filename();
     if ( $srcdst_swapped == 1){
-        push @commandline, "-f";
+       if ($self->{OUTPUTTYPE} eq "raw"){
+           push @commandline, "-F", $self->{OWD_FILE};
+      }else{
+          push @commandline, "-f";
+      }
     }else{
         if($parameters{"one_way"} && ($parameters{"one_way"} eq "from")){
-            push @commandline, "-f";
+            if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-F", $self->{OWD_FILE};
+            }else{
+                push @commandline, "-f";
+            }
+            $self->{ESMOND}{source} =  $parameters{dst};
+            $self->{ESMOND}{destination} =  $parameters{src};
         }elsif($parameters{"one_way"} && ($parameters{"one_way"} eq "to")){
-            push @commandline, "-t";
+            if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-T", $self->{OWD_FILE};
+            }else{
+                push @commandline, "-t";
+            }
         }else{
-            push @commandline, "-t";
+             if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-T",  $self->{OWD_FILE};
+            }else{
+                push @commandline, "-t";
+            }
         }
     }
     
@@ -215,64 +246,33 @@ sub parse_result {
     		if ($resultline =~
     		  #SEQNO STIME SSYNC SERR RTIME RSYNC RERR TTL\n
                 /(\d+)\s*(\d+)\s*(\d+)\s(.+)\s(\d+)\s(\d+)\s(.+)\s(\d+)/){
-                if ( 0 == $5){  #this checks if receive time is 0 can occur on  firewalls
-                    $recTimeiszero++;
-                    next;
-                }
                 my %data_hash;
                 $data_hash{"sequenceNumber"} = $1;
-                $data_hash{"sendTime"} = $2;
-                $data_hash{"sendSynchronized"} = $3;
-                $data_hash{"sendTimeError"} = $4;
-                $data_hash{"receiveTime"} = $5;
-                $data_hash{"receiveSynchronized"} = $6;
-                $data_hash{"receiveTimeError"} = $7;
-                $data_hash{"packetTTL"} = $8;
+                if ( 0 != $5){  #this checks if receive time is 0 => packet loss ..etc
+                    $data_hash{"sendTime"} = $2;
+                    $data_hash{"sendSynchronized"} = $3;
+                    $data_hash{"sendTimeError"} = $4;
+                    $data_hash{"receiveTime"} = $5;
+                    $data_hash{"receiveSynchronized"} = $6;
+                    $data_hash{"receiveTimeError"} = $7;
+                    $data_hash{"packetTTL"} = $8;
+                    $data_hash{delay} = owpdelay($data_hash{"sendTime"}, $data_hash{"receiveTime"} );
+                }
                 push @datalines, \%data_hash;
             } #End foreach
-	#$self->{LOGGER}->info(Dumper(@datalines));
+            #We not storing raw only summary
+            my $owd_file = $self->get_owd_file();
+            my @summaries = split(/\n/, $owd_file);
+            my %summary = %{$self->parse_owamp_summary_output(  \@summaries)};
+            my @esmonddata;
+            push @esmonddata, \%summary;
+            $self->{ESMOND}{STORE}{$id} = \@esmonddata;
     	}#End if 
     }elsif ($self->{OUTPUTTYPE} eq  "machine_readable"){
-    	my $begin_buckets = 0;
-    	my $begin_nreorder = 0;
     	my %data_hash = ();
-    	my $linecount = 0;
-    	 
-    	
-    	#$self->{LOGGER}->debug(Dumper(@result));
-    	
-        foreach my $resultline (@result){
-    		next if $resultline =~ /Approximately/;
-    		next if $resultline =~ s/^\s+//;
-            
-            #look if <BUCKETS> begin
-            $begin_buckets = 1 if $resultline =~ /<BUCKETS/;
-                        
-            #Look if <NREORDERING>
-            $begin_nreorder = 1 if $resultline =~ /<NREORDERING>/;           
-            
-                                        
-            if (!$begin_buckets){
-            	if (!$begin_nreorder){
-                    my ($key, $value) = split (/\s+/, $resultline);
-                    $data_hash{$key} = $value;
-                    $linecount++;
-                    if ($linecount == 24){ 
-                        push @datalines, \%data_hash;
-                        $linecount = 0;                        	
-                    }                    
-            	}
-            }#End  if (!$begin_buckets
-            else{
-            	#TODO add buckets            	
-            }
-            
-            $begin_buckets = 0 if $resultline =~ /\/BUCKETS/;
-            $begin_nreorder = 0 if $resultline =~ /\/NREORDERING/;
-            
-            #$self->{LOGGER}->debug(Dumper($linecount));
-    	}# End foreach
-    }#End if
+        my %summary = %{$self->parse_owamp_summary_output(  \@result)};
+        push @datalines, \%summary;
+   }#End if
     elsif ($self->{OUTPUTTYPE} eq  "summary"){
 	my $count = 0;
 	while( $count < $self->{intermediates} ){
@@ -433,4 +433,54 @@ sub parseOWAMPTime{
 
 }
 
+sub set_metadata_service{
+    my $self = shift;
+    if ($self->set_metadata_owamp_mp($self->{ESMOND})){
+        $self->store_measuremt_data_owamp_mp();
+    }else{
+    }
+}
+
+
+sub owpdelay {
+    my ($start, $end) = @_;
+
+    return ($end - $start)/$scale;
+}
+
+sub parse_owamp_summary_output {
+    my $self = shift;
+    my $summary_output = shift;
+    my $retval;
+
+    eval {
+        my $conf = Config::General->new( -String => $summary_output);
+        my %conf_hash = $conf->getall;
+        $retval = \%conf_hash;
+    };
+    if ($@) {
+        $self->{LOGGER}->error("Problem reading summary file: ".$summary_output.": ".$@);
+    }
+
+    return $retval;
+}
+
+sub get_owd_filename{
+    my $self = shift;
+    my $owd_file;
+    $owd_file = "/tmp/oppd-" . time . ".owd";
+    $self->{OWD_FILE} = $owd_file;
+}
+
+sub get_owd_file{
+    my $self = shift;
+    my $owstats = $self->{MODPARAM}->{owstats};
+    
+    if ($self->{OUTPUTTYPE} eq "raw"){
+        $owstats = $owstats . " -M";
+    }
+ 
+    my $result = `$owstats $self->{OWD_FILE}`;
+    return $result;
+}
 1;
