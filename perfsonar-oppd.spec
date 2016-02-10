@@ -39,14 +39,9 @@ Requires:       perfsonar-oppd-shared
 Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
-<<<<<<< HEAD:perl-perfSONAR-OPPD-MP.spec
 Requires:	perl(Net::DNS)
 Requires:	perl(Net::INET6Glue)
 Requires:       perl(perfSONAR_PS:Toolkit:Library)
-=======
-Requires:       perl(Net::DNS)
-Requires:       perl(Net::INET6Glue)
->>>>>>> 755fbe176d9f437332351361dcc4f450d1ed8ff7:perfsonar-oppd.spec
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 Obsoletes:      perl-perfSONAR-OPPD-MP-server
