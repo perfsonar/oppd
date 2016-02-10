@@ -122,8 +122,8 @@ sub set_metadata_bwctl_mp{
     $self->{METADATA}->add_event_type('throughput-subintervals');
    $self->{METADATA}->post_metadata();
    if ($self->{METADATA}->error()){
-       $self->{LOGGER}->error( $self->{METADATA}->error());
-       return -1;
+       $self->{LOGGER}->error( "Post metadata error:" . $self->{METADATA}->error());
+       return 0;
     }else{
         return 1;
     }
@@ -161,8 +161,8 @@ sub set_metadata_owamp_mp{
     $self->{METADATA}->post_metadata();
 
     if ($self->{METADATA}->error()){
-       $self->{LOGGER}->error( $self->{METADATA}->error());
-       return -1;
+       $self->{LOGGER}->error( "Post metadata error:" . $self->{METADATA}->error());
+       return 0;
     }else{
         return 1;
     }
@@ -195,7 +195,12 @@ sub store_measuremt_data_bwctl_mp{
 sub store_measuremt_data_owamp_mp{
     my $self = shift;
     my $ds = $self->{DS};
-    my $datalines_ref = $$ds->{SERVICE}->{DATA}->{1}->{MRESULT};
+    my $datalines_ref;
+    if ($self->{OUTPUTTYPE} eq "machine_readable"){
+        $datalines_ref = $$ds->{SERVICE}->{DATA}->{1}->{MRESULT};
+    }elsif($self->{OUTPUTTYPE} eq "raw"){
+        $datalines_ref = $self->{ESMOND}{STORE}{1};
+    }
     my $bulk_post = $self->{METADATA}->generate_event_type_bulk_post();
     my $ts = time;
 

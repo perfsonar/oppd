@@ -61,8 +61,6 @@ sub run{
     my ($self, $ds) = @_;
     $self->{LOGGER} = get_logger(__PACKAGE__);
     $self->{DS} = $ds;
-    my $filters = new perfSONAR_PS::Client::Esmond::ApiFilters();
-
     
     $self->runMeasurement();
 }
@@ -162,17 +160,34 @@ sub createCommandLine{
     push @commandline, "-P", $parameters{portrange} if $parameters{portrange};
     
     push @commandline, "-a" if($parameters{"percentile"});
+    $self->get_owd_filename();
     if ( $srcdst_swapped == 1){
-        push @commandline, "-f";
+       if ($self->{OUTPUTTYPE} eq "raw"){
+           push @commandline, "-F", $self->{OWD_FILE};
+      }else{
+          push @commandline, "-f";
+      }
     }else{
         if($parameters{"one_way"} && ($parameters{"one_way"} eq "from")){
-            push @commandline, "-f";
+            if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-F", $self->{OWD_FILE};
+            }else{
+                push @commandline, "-f";
+            }
             $self->{ESMOND}{source} =  $parameters{dst};
             $self->{ESMOND}{destination} =  $parameters{src};
         }elsif($parameters{"one_way"} && ($parameters{"one_way"} eq "to")){
-            push @commandline, "-t";
+            if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-T", $self->{OWD_FILE};
+            }else{
+                push @commandline, "-t";
+            }
         }else{
-            push @commandline, "-t";
+             if ($self->{OUTPUTTYPE} eq "raw"){
+                push @commandline, "-T",  $self->{OWD_FILE};
+            }else{
+                push @commandline, "-t";
+            }
         }
     }
     
@@ -245,6 +260,13 @@ sub parse_result {
                 }
                 push @datalines, \%data_hash;
             } #End foreach
+            #We not storing raw only summary
+            my $owd_file = $self->get_owd_file();
+            my @summaries = split(/\n/, $owd_file);
+            my %summary = %{$self->parse_owamp_summary_output(  \@summaries)};
+            my @esmonddata;
+            push @esmonddata, \%summary;
+            $self->{ESMOND}{STORE}{$id} = \@esmonddata;
     	}#End if 
     }elsif ($self->{OUTPUTTYPE} eq  "machine_readable"){
     	my %data_hash = ();
@@ -414,11 +436,8 @@ sub parseOWAMPTime{
 sub set_metadata_service{
     my $self = shift;
     if ($self->set_metadata_owamp_mp($self->{ESMOND})){
-        if ($self->{OUTPUTTYPE} eq  "machine_readable"){
-            $self->store_measuremt_data_owamp_mp();
-        } else{
-            $self->{LOGGER}->warn("This output type is not supported foresmond storage: " . $self->{OUTPUTTYPE});
-        }
+        $self->store_measuremt_data_owamp_mp();
+    }else{
     }
 }
 
@@ -446,4 +465,22 @@ sub parse_owamp_summary_output {
     return $retval;
 }
 
+sub get_owd_filename{
+    my $self = shift;
+    my $owd_file;
+    $owd_file = "/tmp/oppd-" . time . ".owd";
+    $self->{OWD_FILE} = $owd_file;
+}
+
+sub get_owd_file{
+    my $self = shift;
+    my $owstats = $self->{MODPARAM}->{owstats};
+    
+    if ($self->{OUTPUTTYPE} eq "raw"){
+        $owstats = $owstats . " -M";
+    }
+ 
+    my $result = `$owstats $self->{OWD_FILE}`;
+    return $result;
+}
 1;

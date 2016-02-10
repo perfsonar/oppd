@@ -102,7 +102,7 @@ template for this:
 The constructor is called withoud a parameter.
 =cut
 sub new{
-	my ($class,%module_param) = @_;
+    my ($class,%module_param) = @_;
     my $self = {};
     $self->{LOGGER} = get_logger(__PACKAGE__);
     if (exists $module_param{command}){
@@ -133,23 +133,19 @@ occurnes the field is set to "ERROR".
 
 =cut
 sub runMeasurement{
-	my ($self) = @_;
-	my $logger = get_logger("perfSONAR::MP" );
-	my $ds = $self->{DS};
-	my $pass;
+    my ($self) = @_;
+    my $logger = get_logger("perfSONAR::MP" );
+    my $ds = $self->{DS};
+    my $pass;
 	
-	#Get tool for commandline
-    #my $tool = $$ds->{SERVICES}->{$$ds->{SERVICE}->{NAME}}->{tool};
+    #Get tool for commandline
     my $tool = $self->{COMMAND};
 	
-	my $data = $$ds->{SERVICE}->{DATA};
-	#$self->{LOGGER}->info(Dumper($data));
-	foreach my $id (keys %{$data}){
-		
-		my @commandline = $self->createCommandLine(
-		      %{$data->{$id}->{PARAMS}});
+    my $data = $$ds->{SERVICE}->{DATA};
+    foreach my $id (keys %{$data}){		
+        my @commandline = $self->createCommandLine( %{$data->{$id}->{PARAMS}});
         
-		if ($commandline[0] eq "ERROR") {
+	if ($commandline[0] eq "ERROR") {
             $$ds->{ERROROCCUR} = 1;
             push @commandline,"error.$tool.mp";
             $$ds->{SERVICE}->{DATA}->{$id}->{MRESULT} = \@commandline;
