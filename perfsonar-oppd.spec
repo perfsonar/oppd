@@ -41,7 +41,7 @@ Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
 Requires:	perl(Net::DNS)
 Requires:	perl(Net::INET6Glue)
-Requires:       perl(perfSONAR_PS:Toolkit:Library)
+Requires:       libperfsonar-perl-esmond 
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 Obsoletes:      perl-perfSONAR-OPPD-MP-server
