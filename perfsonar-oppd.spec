@@ -242,6 +242,7 @@ exit 0
 %{install_base}/lib/perfSONAR.pm
 %{install_base}/lib/perfSONAR/Client/*
 %{install_base}/lib/perfSONAR/DataStruct/*
+%{install_base}/lib/perfSONAR/Esmond/*
 %{install_base}/lib/perfSONAR/SOAP/*
 %{install_base}/lib/perfSONAR/AS.pm
 %{install_base}/lib/perfSONAR/Auth.pm
