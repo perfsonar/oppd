@@ -20,6 +20,7 @@ lib/perfSONAR/Client/LS.pm
 lib/perfSONAR/DataStruct.pm
 lib/perfSONAR/DataStruct/NMWG.pm
 lib/perfSONAR/Echo.pm
+lib/perfSONAR/Esmond/Client.pm
 lib/perfSONAR/LS.pm
 lib/perfSONAR/MA.pm
 lib/perfSONAR/MP.pm
