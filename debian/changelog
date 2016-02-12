@@ -1,4 +1,4 @@
-perfsonar-oppd (3.5.1~2.a1-1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5.1~3.rc1-1) UNRELEASED; urgency=low
 
   * Port to Jessie.
   * Correcting IPv6 listening mode (fixes #6)
