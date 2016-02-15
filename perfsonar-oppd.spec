@@ -6,7 +6,7 @@
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd-server.log
 
-%define relnum 0.0.a1
+%define relnum 0.1.rc1
 
 Name:			perfsonar-oppd
 Version:		3.5.1
@@ -39,14 +39,9 @@ Requires:       perfsonar-oppd-shared
 Requires:	    ntp
 Requires:       perl(HTTP::Daemon::SSL)
 Requires:       perl(Config::General)
-<<<<<<< HEAD:perl-perfSONAR-OPPD-MP.spec
 Requires:	perl(Net::DNS)
 Requires:	perl(Net::INET6Glue)
-Requires:       perl(perfSONAR_PS:Toolkit:Library)
-=======
-Requires:       perl(Net::DNS)
-Requires:       perl(Net::INET6Glue)
->>>>>>> 755fbe176d9f437332351361dcc4f450d1ed8ff7:perfsonar-oppd.spec
+Requires:       libperfsonar-esmond-perl 
 Obsoletes:      oppd
 Obsoletes:      perfsonar-oppd < 0.53
 Obsoletes:      perl-perfSONAR-OPPD-MP-server
@@ -247,6 +242,7 @@ exit 0
 %{install_base}/lib/perfSONAR.pm
 %{install_base}/lib/perfSONAR/Client/*
 %{install_base}/lib/perfSONAR/DataStruct/*
+%{install_base}/lib/perfSONAR/Esmond/*
 %{install_base}/lib/perfSONAR/SOAP/*
 %{install_base}/lib/perfSONAR/AS.pm
 %{install_base}/lib/perfSONAR/Auth.pm
