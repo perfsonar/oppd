@@ -1,10 +1,10 @@
-perfsonar-oppd (3.5.1~3.rc1-1~bpo70+1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5.1~4.rc1-1~bpo70+1) UNRELEASED; urgency=low
 
   * Backport to Wheezy
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 10 Feb 2016 20:40:21 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Mon, 15 Feb 2016 19:59:51 +0000
 
-perfsonar-oppd (3.5.1~2.a1-1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5.1~4.rc1-1) UNRELEASED; urgency=low
 
   * Port to Jessie.
   * Correcting IPv6 listening mode (fixes #6)
@@ -12,7 +12,7 @@ perfsonar-oppd (3.5.1~2.a1-1) UNRELEASED; urgency=low
   * Adding esmond storage support for perfsonar-oppd-bwctl.
   * Adding esmond storage support for perfsonar-oppd-owamp.
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Wed, 10 Feb 2016 20:20:56 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Mon, 15 Feb 2016 19:56:55 +0000
 
 perfsonar-oppd (3.5-1) perfsonar-wheezy-release; urgency=low
 
