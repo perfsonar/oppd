@@ -167,15 +167,17 @@ sub createCommandLine{
       }else{
           push @commandline, "-f";
       }
+          $self->{ESMOND}{source} =  $parameters{dst};
+          $self->{ESMOND}{destination} =  $parameters{src};
     }else{
         if($parameters{"one_way"} && ($parameters{"one_way"} eq "from")){
             if ($self->{OUTPUTTYPE} eq "raw"){
                 push @commandline, "-F", $self->{OWD_FILE};
+                $self->{ESMOND}{source} =  $parameters{dst};
+                $self->{ESMOND}{destination} =  $parameters{src};
             }else{
                 push @commandline, "-f";
             }
-            $self->{ESMOND}{source} =  $parameters{dst};
-            $self->{ESMOND}{destination} =  $parameters{src};
         }elsif($parameters{"one_way"} && ($parameters{"one_way"} eq "to")){
             if ($self->{OUTPUTTYPE} eq "raw"){
                 push @commandline, "-T", $self->{OWD_FILE};
