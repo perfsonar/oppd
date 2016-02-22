@@ -20,6 +20,17 @@ set -e
 
 case "$1" in
     configure)
+        # Rename configuration files
+        if dpkg-maintscript-helper supports mv_conffile; then
+            dpkg-maintscript-helper mv_conffile \
+                /etc/perfsonar/oppd.d/owamp.conf \
+                /etc/perfsonar/oppd-server.d/owamp.conf \
+                3.5-1 -- "$@"
+        fi
+        if [ -d /etc/perfsonar/oppd.d ]; then
+            rmdir --ignore-fail-on-non-empty /etc/perfsonar/oppd.d
+        fi
+
         if [ -x "/etc/init.d/perfsonar-oppd-server" ]; then
             invoke-rc.d perfsonar-oppd-server restart || exit $?
         fi

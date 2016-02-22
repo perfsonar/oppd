@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for perfsonar-oppd-bwctl
+# postinst script for perfsonar-oppd-server
 #
 # see: dh_installdeb(1)
 
@@ -23,16 +23,22 @@ case "$1" in
         # Rename configuration files
         if dpkg-maintscript-helper supports mv_conffile; then
             dpkg-maintscript-helper mv_conffile \
-                /etc/perfsonar/oppd.d/bwctl.conf \
-                /etc/perfsonar/oppd-server.d/bwctl.conf \
+                /etc/perfsonar/oppd.conf \
+                /etc/perfsonar/oppd-server.conf \
                 3.5-1 -- "$@"
         fi
+        for XML in Auth_request.xml Auth_response.xml LS_deregister.xml \
+                   LS_keepalive.xml LS_KeyRequest.xml LS_register.xml
+        do
+            if dpkg-maintscript-helper supports mv_conffile; then
+                dpkg-maintscript-helper mv_conffile \
+                    /etc/perfsonar/oppd.d/$XML \
+                    /etc/perfsonar/oppd-server.d/$XML \
+                    3.5-1 -- "$@"
+            fi
+        done
         if [ -d /etc/perfsonar/oppd.d ]; then
             rmdir --ignore-fail-on-non-empty /etc/perfsonar/oppd.d
-        fi
-
-        if [ -x "/etc/init.d/perfsonar-oppd-server" ]; then
-            invoke-rc.d perfsonar-oppd-server restart || true
         fi
     ;;
 
