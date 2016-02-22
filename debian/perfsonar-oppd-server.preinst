@@ -21,7 +21,7 @@ case "$1" in
             dpkg-maintscript-helper mv_conffile \
                 /etc/perfsonar/oppd.conf \
                 /etc/perfsonar/oppd-server.conf \
-                3.5-1 -- "$@"
+                3.5.1~4.rc1-2~bpo70+1~ -- "$@"
         fi
         for XML in Auth_request.xml Auth_response.xml LS_deregister.xml \
                    LS_keepalive.xml LS_KeyRequest.xml LS_register.xml
@@ -30,7 +30,7 @@ case "$1" in
                 dpkg-maintscript-helper mv_conffile \
                     /etc/perfsonar/oppd.d/$XML \
                     /etc/perfsonar/oppd-server.d/$XML \
-                    3.5-1 -- "$@"
+                    3.5.1~4.rc1-2~bpo70+1~ -- "$@"
             fi
         done
     ;;
