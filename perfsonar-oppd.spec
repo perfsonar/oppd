@@ -261,7 +261,7 @@ exit 0
 %attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd-server.pl
 %config /etc/init.d/perfsonar-oppd-server
 %config %{config_base}/oppd-server.conf
-%config %{config_base}/oppd-server.d/*.xml
+#%config %{config_base}/oppd-server.d/*.xml
 %config /etc/sysconfig/oppd-server
 
 %files bwctl
