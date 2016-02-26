@@ -1,3 +1,2 @@
 etc/oppd-server.conf		/etc/perfsonar
-etc/oppd-server.d/*.xml		/etc/perfsonar/oppd-server.d
 bin/oppd-server.pl		/usr/lib/perfsonar/bin
