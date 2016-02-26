@@ -13,7 +13,8 @@ Architecture: all
 Depends: perfsonar-common, libdatetime-perl, libhttp-daemon-perl,
  libhttp-message-perl, libipc-run-perl, liblog-log4perl-perl,
  libwww-perl, libnet-dns-perl, libsocket6-perl, libsys-hostname-long-perl,
- liburi-perl, libxml-libxml-perl, libperfsonar-perl, ${misc:Depends}
+ liburi-perl, libxml-libxml-perl, libperfsonar-perl, libperfsonar-esmond-perl,
+ ${misc:Depends}
 Description: On-demand measurement point shared libraries
  Shared libraries used by the on-demand measurement point.
 
