@@ -1,6 +1,0 @@
-<nmwg:message id="authNMessage1_resp" messageIdRef="authNMessage1" type="AuthNEEResponse" xmlns:nmwg="http://ggf.org/ns/nmwg/base/2.0/">
-       <nmwg:metadata id="localhost.localdomain.2c534c44:114b3c44663:-7fcd">
-           <nmwg:eventType>success.as.authn</nmwg:eventType>
-       </nmwg:metadata>
-       <nmwg:data id="localhost.localdomain.2c534c44:114b3c44663:-7fcc" metadataIdRef="localhost.localdomain.2c534c44:114b3c44663:-7fcd"/>
-   </nmwg:message>
