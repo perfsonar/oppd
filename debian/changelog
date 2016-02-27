@@ -1,4 +1,4 @@
-perfsonar-oppd (3.5.1~4.rc1-2) perfsonar-jessie-staging; urgency=low
+perfsonar-oppd (3.5.1~5.rc1-1) perfsonar-jessie-staging; urgency=low
 
   * Port to Jessie.
   * Correcting IPv6 listening mode (fixes #6)
@@ -7,7 +7,7 @@ perfsonar-oppd (3.5.1~4.rc1-2) perfsonar-jessie-staging; urgency=low
   * Adding esmond storage support for perfsonar-oppd-owamp.
   * Moved configuration directory to /etc/oppd-server.d
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Mon, 22 Feb 2016 22:58:15 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sat, 27 Feb 2016 19:44:39 +0000
 
 perfsonar-oppd (3.5-1) perfsonar-wheezy-release; urgency=low
 

@@ -6,7 +6,7 @@
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd-server.log
 
-%define relnum 0.3.rc1
+%define relnum 0.4.rc1
 
 Name:			perfsonar-oppd
 Version:		3.5.1
@@ -179,6 +179,13 @@ if [ "$1" = "1" ]; then
         sed -i "s:/opt/perfsonar_ps/oppd_mp/bin/oppd.pl:/usr/lib/perfsonar/bin/oppd-server.pl:g" /etc/sysconfig/oppd-server
         sed -i "s:/opt/perfsonar_ps/oppd_mp/etc/oppd.conf:/etc/perfsonar/oppd-server.conf:g" /etc/sysconfig/oppd-server
     fi
+    # Removing old XML files no longer used and confusing
+    rm -f /etc/oppd-server.d/Auth_request.xml
+    rm -f /etc/oppd-server.d/Auth_response.xml
+    rm -f /etc/oppd-server.d/LS_KeyRequest.xml
+    rm -f /etc/oppd-server.d/LS_deregister.xml
+    rm -f /etc/oppd-server.d/LS_keepalive.xml
+    rm -f /etc/oppd-server.d/LS_register.xml
 fi
 
 %post bwctl
