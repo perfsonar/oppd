@@ -1,8 +1,8 @@
 perfsonar-oppd (3.5.1~5.rc1-1~bpo70+1) perfsonar-wheezy-staging; urgency=low
 
-  * Backporting to Wheezy.
+  * Backport to Wheezy.
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sat, 27 Feb 2016 19:49:02 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sat, 27 Feb 2016 20:16:17 +0000
 
 perfsonar-oppd (3.5.1~5.rc1-1) perfsonar-jessie-staging; urgency=low
 
@@ -13,7 +13,7 @@ perfsonar-oppd (3.5.1~5.rc1-1) perfsonar-jessie-staging; urgency=low
   * Adding esmond storage support for perfsonar-oppd-owamp.
   * Moved configuration directory to /etc/oppd-server.d
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sat, 27 Feb 2016 19:44:39 +0000
+ -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sat, 27 Feb 2016 20:05:18 +0000
 
 perfsonar-oppd (3.5-1) perfsonar-wheezy-release; urgency=low
 
