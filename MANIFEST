@@ -2,12 +2,6 @@ MANIFEST
 Makefile
 bin/oppd-server.pl
 etc/oppd-server.conf
-etc/oppd-server.d/Auth_request.xml
-etc/oppd-server.d/Auth_response.xml
-etc/oppd-server.d/LS_KeyRequest.xml
-etc/oppd-server.d/LS_deregister.xml
-etc/oppd-server.d/LS_keepalive.xml
-etc/oppd-server.d/LS_register.xml
 etc/oppd-server.d/bwctl.conf
 etc/oppd-server.d/owamp.conf
 etc/oppd-server.sysconfig
