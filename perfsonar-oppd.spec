@@ -6,7 +6,7 @@
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd-server.log
 
-%define relnum 0.4.rc1
+%define relnum 1
 
 Name:			perfsonar-oppd
 Version:		3.5.1
