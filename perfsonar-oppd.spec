@@ -10,7 +10,7 @@
 
 Name:			perfsonar-oppd
 Version:		3.5.1
-Release:		%{relnum}
+Release:		%{relnum}%{?dist}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE
 Group:			Development/Libraries
