@@ -19,6 +19,10 @@ Source0:		perfsonar-oppd-%{version}.%{relnum}.tar.gz
 BuildRoot:		%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:		noarch
 Requires:		perl
+%if 0%{?el7}
+BuildRequires: systemd
+%{?systemd_requires: %systemd_requires}
+%endif
 
 %description
 Executes on-demand measurements through a web interface
@@ -119,9 +123,12 @@ fi
 
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+%if 0%{?el7}
+%else
 if [ "$1" = 0 ] ; then
     /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
+%endif
 exit 0
 
 %pre owamp
@@ -136,9 +143,12 @@ fi
 
 /usr/sbin/groupadd perfsonar 2> /dev/null || :
 /usr/sbin/useradd -g perfsonar -r -s /sbin/nologin -c "perfSONAR User" -d /tmp perfsonar 2> /dev/null || :
+%if 0%{?el7}
+%else
 if [ "$1" = 0 ] ; then
 /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
+%endif
 exit 0
 
 %prep
@@ -153,7 +163,11 @@ make ROOTPATH=%{buildroot}/%{install_base} CONFIGPATH=%{buildroot}/%{config_base
 
 mkdir -p %{buildroot}/etc/init.d
 
+%if 0%{?el7}
+install -D -m 0644 scripts/%{init_script_1}.service %{buildroot}%{_unitdir}/%{init_script_1}.service
+%else
 install -D -m 0755 scripts/%{init_script_1} %{buildroot}/etc/init.d/%{init_script_1}
+%endif
 rm -rf %{buildroot}/%{install_base}/scripts/
 
 mkdir -p %{buildroot}/etc/sysconfig
@@ -166,6 +180,9 @@ mkdir -p %{buildroot}/etc/httpd/conf.d
 rm -rf %{buildroot}
 
 %post server
+%if 0%{?el7}
+%systemd_post %{init_script_1}.service
+%else
 /sbin/chkconfig --add perfsonar-oppd-server
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
@@ -187,8 +204,12 @@ if [ "$1" = "1" ]; then
     rm -f /etc/oppd-server.d/LS_keepalive.xml
     rm -f /etc/oppd-server.d/LS_register.xml
 fi
+%endif
 
 %post bwctl
+%if 0%{?el7}
+systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+%else
 /sbin/service perfsonar-oppd-server start > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
@@ -197,8 +218,12 @@ if [ "$1" = "1" ]; then
         mv /opt/perfsonar_ps/oppd_mp/etc/oppd.d/bwctl.conf %{config_base}/oppd-server.d/bwctl.conf
     fi
 fi
+%endif
 
 %post owamp
+%if 0%{?el7}
+systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+%else
 /sbin/service perfsonar-oppd-server start > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
@@ -207,39 +232,61 @@ if [ "$1" = "1" ]; then
         mv /opt/perfsonar_ps/oppd_mp/etc/oppd.d/owamp.conf %{config_base}/oppd-server.d/owamp.conf
     fi
 fi
+%endif
 
 %preun server
+%if 0%{?el7}
+%systemd_preun %{init_script_1}.service
+%else
 if [ "$1" = 0 ] ; then
     /sbin/service perfsonar-oppd-server stop
     /sbin/chkconfig --del perfsonar-oppd-server
 fi
+%endif
 if [ -f "%{oppdlogdir}%{oppdlogfile}" ]; then
     rm -rf %{oppdlogdir}%{oppdlogfile}
 fi
 exit 0
 
 %preun bwctl
+%if 0%{?el7}
+%else
 if [ "$1" = 0 ] ; then
     /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
+%endif
 exit 0
 
 %preun owamp
+%if 0%{?el7}
+%else
 if [ "$1" = 0 ] ; then
     /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 fi
+%endif
 exit 0
 
+%postun server
+%systemd_postun_with_restart %{init_script_1}.service
+
 %postun bwctl
+%if 0%{?el7}
+systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+%else
 if [ "$1" -ge 1 ]; then
     /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
+%endif
 exit 0
 
 %postun owamp
+%if 0%{?el7}
+systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+%else
 if [ "$1" -ge 1 ]; then
     /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
+%endif
 exit 0
 
 %files shared
@@ -266,9 +313,13 @@ exit 0
 %files server
 %defattr(-,perfsonar,perfsonar,-)
 %attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd-server.pl
-%config /etc/init.d/perfsonar-oppd-server
 %config %{config_base}/oppd-server.conf
 %config /etc/sysconfig/oppd-server
+%if 0%{?el7}
+%attr(0644,root,root) %{_unitdir}/%{init_script_1}.service
+%else
+%config /etc/init.d/%{init_script_1}
+%endif
 
 %files bwctl
 %defattr(-,perfsonar,perfsonar,-)
