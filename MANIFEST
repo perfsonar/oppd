@@ -33,3 +33,4 @@ lib/perfSONAR/SOAP/Message.pm
 lib/perfSONAR/Selftest.pm
 lib/perfSONAR/Tools.pm
 scripts/perfsonar-oppd-server
+scripts/perfsonar-oppd-server.service
