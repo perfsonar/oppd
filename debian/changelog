@@ -1,14 +1,14 @@
-perfsonar-oppd (3.5.1.1w-1~bpo70+1) UNRELEASED; urgency=low
-
-  * TO BE FILLED IN...
-
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sun, 15 May 2016 17:14:06 +0000
-
-perfsonar-oppd (3.5.1-1~bpo70+1) perfsonar-wheezy-release; urgency=low
+perfsonar-oppd (3.5.1.1-1~bpo70+1) perfsonar-wheezy-release; urgency=high
 
   * Backport to Wheezy.
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Fri, 04 Mar 2016 10:59:57 +0100
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 07 Jul 2016 14:06:19 +0000
+
+perfsonar-oppd (3.5.1.1-1) perfsonar-jessie-release; urgency=high
+
+  * New upstream version.
+
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 07 Jul 2016 13:58:33 +0000
 
 perfsonar-oppd (3.5.1-1) perfsonar-jessie-release; urgency=low
 
