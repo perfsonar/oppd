@@ -192,9 +192,10 @@ sub from_string {
   my ($source,$uri) = @_;
 
   croak "No XML source to parse" unless $source;
+  my $parser = XML::LibXML->new(ext_ent_handler => sub { return ""; });
   my $dom;
   eval {
-    $dom = XML::LibXML->new->parse_string($source);
+    $dom = $parser->parse_string($source);
   };
   if ($@){
     #TODO Make me a special Exception!
@@ -275,9 +276,10 @@ sub _prepare_nodes {
     } elsif (UNIVERSAL::isa($entry,"XML::LibXML::Node")) {
       push @result, $entry;
     } else {
+      my $parser = XML::LibXML->new(ext_ent_handler => sub { return ""; });
       my $dom;
       eval {
-        $dom = XML::LibXML->new->parse_string($entry);
+        $dom = $parser->parse_string($entry);
       };
       if ($@){
         croak "Error parsing XML source: $@";
