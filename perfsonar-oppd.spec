@@ -9,7 +9,7 @@
 %define relnum 1
 
 Name:			perfsonar-oppd
-Version:		3.5.1
+Version:		3.5.1.1
 Release:		%{relnum}%{?dist}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE
@@ -332,6 +332,8 @@ exit 0
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
 
 %changelog
+*  Thu Jul 07 2016 antoine.delvaux@man.poznan.pl
+- Correcting XXE vulnerability.
 *  Fri Sep 26 2014 hakan.calim@fau.de
 - Added creation of log file in /var/log/perfsonar/oppd.log.
 - Fix bug in preun of server.

@@ -64,7 +64,7 @@ sub parse_xml {
   my $dom;
   #eval{ 
   if ( $xml_version < 1.7){
-      my $parser = XML::LibXML->new();
+      my $parser = XML::LibXML->new(ext_ent_handler => sub { return ""; });
       $dom = $parser->parse_file($file);
   }else{
       $dom = XML::LibXML->load_xml(location => $file);
