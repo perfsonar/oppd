@@ -1,8 +1,8 @@
-perfsonar-oppd (3.5.1.1j-1) UNRELEASED; urgency=low
+perfsonar-oppd (3.5.1.1-1) perfsonar-jessie-release; urgency=high
 
-  * TO BE FILLED IN...
+  * New upstream version.
 
- -- Antoine Delvaux <adelvaux@man.poznan.pl>  Sun, 15 May 2016 17:13:00 +0000
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 07 Jul 2016 13:58:33 +0000
 
 perfsonar-oppd (3.5.1-1) perfsonar-jessie-release; urgency=low
 
