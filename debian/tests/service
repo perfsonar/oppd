@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+service perfsonar-oppd-server status
+
+pgrep -fl oppd-server.pl
