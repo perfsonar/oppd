@@ -182,8 +182,10 @@ rm -rf %{buildroot}
 %post server
 %if 0%{?el7}
 %systemd_post %{init_script_1}.service
+5P
 %else
-/sbin/chkconfig --add perfsonar-oppd-server
+# remove auto start  for 4.0 release
+#/sbin/chkconfig --add perfsonar-oppd-server
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.conf" ]; then
@@ -208,9 +210,10 @@ fi
 
 %post bwctl
 %if 0%{?el7}
-systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+# remove any starts for 4.0 release
+#systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
-/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+#/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/bwctl.conf" ]; then
@@ -222,9 +225,10 @@ fi
 
 %post owamp
 %if 0%{?el7}
-systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+# removing any start for 4.0 release
+#systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
-/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+#/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/owamp.conf" ]; then
@@ -271,20 +275,22 @@ exit 0
 
 %postun bwctl
 %if 0%{?el7}
-systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+#remove any start for 4.0 release
+#systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
 if [ "$1" -ge 1 ]; then
-    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
+#    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
 %endif
 exit 0
 
 %postun owamp
 %if 0%{?el7}
-systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
+# remove any start for 4.0 release
+#systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
 if [ "$1" -ge 1 ]; then
-    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
+#    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
 fi
 %endif
 exit 0
@@ -332,6 +338,8 @@ exit 0
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
 
 %changelog
+*  Thu Oct 27 2016 hakan.calim@fau.de
+- Removing auto starts for 4.0 release.
 *  Thu Jul 07 2016 antoine.delvaux@man.poznan.pl
 - Correcting XXE vulnerability.
 *  Fri Sep 26 2014 hakan.calim@fau.de
