@@ -181,11 +181,14 @@ rm -rf %{buildroot}
 
 %post server
 %if 0%{?el7}
-%systemd_post %{init_script_1}.service
+# No inits with systemd in 4.0
+#%systemd_post %{init_script_1}.service
 5P
 %else
 # remove auto start  for 4.0 release
 #/sbin/chkconfig --add perfsonar-oppd-server
+#remove init scripts
+/sbin/chkconfig --del perfsonar-oppd-server
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.conf" ]; then
@@ -214,6 +217,7 @@ fi
 #systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
 #/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+/sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/bwctl.conf" ]; then
@@ -229,6 +233,7 @@ fi
 #systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
 %else
 #/sbin/service perfsonar-oppd-server start > /dev/null 2>&1
+/sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
 if [ "$1" = "1" ]; then
      # clean install, check for pre 3.5.1 files
     if [ -e "/opt/perfsonar_ps/oppd_mp/etc/oppd.d/owamp.conf" ]; then
@@ -243,7 +248,7 @@ fi
 %systemd_preun %{init_script_1}.service
 %else
 if [ "$1" = 0 ] ; then
-    /sbin/service perfsonar-oppd-server stop
+    /sbin/service perfsonar-oppd-server stop > /dev/null 2>&1
     /sbin/chkconfig --del perfsonar-oppd-server
 fi
 %endif
@@ -271,28 +276,28 @@ fi
 exit 0
 
 %postun server
-%systemd_postun_with_restart %{init_script_1}.service
+#%systemd_postun_with_restart %{init_script_1}.service
 
 %postun bwctl
-%if 0%{?el7}
+#%if 0%{?el7}
 #remove any start for 4.0 release
 #systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
-%else
-if [ "$1" -ge 1 ]; then
+#%else
+#if [ "$1" -ge 1 ]; then
 #    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
-fi
-%endif
+#fi
+#%endif
 exit 0
 
 %postun owamp
-%if 0%{?el7}
+#%if 0%{?el7}
 # remove any start for 4.0 release
 #systemctl try-restart %{init_script_1} >/dev/null 2>&1 || :
-%else
-if [ "$1" -ge 1 ]; then
+#%else
+#if [ "$1" -ge 1 ]; then
 #    /sbin/service perfsonar-oppd-server condrestart > /dev/null 2>&1
-fi
-%endif
+#fi
+#%endif
 exit 0
 
 %files shared
