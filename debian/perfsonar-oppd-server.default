@@ -1,0 +1,5 @@
+# This file controls the activity of OPPD
+
+# oppd control (yes means start daemon).
+OPPDRUN=no
+

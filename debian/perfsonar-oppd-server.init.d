@@ -24,6 +24,9 @@ DAEMON_ARGS="--config=$CONFFILE --pidfile=$PIDFILE --logfile=$LOGFILE"
 USER=perfsonar
 GROUP=perfsonar
 
+# Only run if OPPDRUN is set to yes in the defaults file
+OPPDRUN=no
+
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
 
@@ -48,11 +51,13 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
-		|| return 1
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --chuid $USER:$GROUP -- \
-		$DAEMON_ARGS \
-		|| return 2
+        if [ "$OPPDRUN" = "yes" ]; then
+            start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+                    || return 1
+            start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --chuid $USER:$GROUP -- \
+                    $DAEMON_ARGS \
+                    || return 2
+        fi
 }
 
 #
