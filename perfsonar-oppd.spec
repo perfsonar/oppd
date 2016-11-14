@@ -6,7 +6,7 @@
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd-server.log
 
-%define relnum 0.1.rc2
+%define relnum 0.2.rc2
 
 Name:			perfsonar-oppd
 Version:		4.0
@@ -183,7 +183,6 @@ rm -rf %{buildroot}
 %if 0%{?el7}
 # No inits with systemd in 4.0
 #%systemd_post %{init_script_1}.service
-5P
 %else
 # remove auto start  for 4.0 release
 #/sbin/chkconfig --add perfsonar-oppd-server
