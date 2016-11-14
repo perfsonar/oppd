@@ -1,8 +1,10 @@
-perfsonar-oppd (3.5.1.1j-1) UNRELEASED; urgency=low
+perfsonar-oppd (4.0~2.rc2-1) UNRELEASED; urgency=low
 
-  * TO BE FILLED IN...
+  * Adding /etc/default/perfsonar-oppd-server file to enable/disable the
+    daemon.
+  * Daemon stopped and disabled by default.
 
- -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 07 Jul 2016 15:15:33 +0000
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Mon, 14 Nov 2016 18:15:50 +0100
 
 perfsonar-oppd (3.5.1.1-1) perfsonar-jessie-release; urgency=high
 
