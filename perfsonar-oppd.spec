@@ -6,10 +6,10 @@
 %define oppdlogdir /var/log/perfsonar/
 %define oppdlogfile oppd-server.log
 
-%define relnum 2
+%define relnum 0.1.rc2
 
 Name:			perfsonar-oppd
-Version:		3.5.1.1
+Version:		4.0
 Release:		%{relnum}%{?dist}
 Summary:		perfSONAR OPPD Measurement Point
 License:		Distributable, see LICENSE

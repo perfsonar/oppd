@@ -1,8 +1,8 @@
 PACKAGE=perfsonar-oppd
 ROOTPATH=/usr/lib/perfsonar
 CONFIGPATH=/etc/perfsonar
-VERSION=3.5.1.1
-RELEASE=2
+VERSION=4.0
+RELEASE=0.1.rc2
 
 default:
 	@echo No need to build the package. Just run \"make install\"
