@@ -20,7 +20,7 @@ Description: On-demand measurement point shared libraries
 
 Package: perfsonar-oppd-server
 Architecture: all
-Depends: perfsonar-oppd-shared, ntp, lsb-base (>= 3.2-14),
+Depends: perfsonar-oppd-shared (= ${binary:Version}), ntp, lsb-base (>= 3.2-14),
  libconfig-general-perl, liblog-log4perl-perl, libhttp-message-perl,
  libhttp-daemon-ssl-perl, libsys-hostname-long-perl, liblog-dispatch-perl,
  libnet-inet6glue-perl, ${misc:Depends}
@@ -30,13 +30,14 @@ Description: On-demand measurement point daemon
 
 Package: perfsonar-oppd-bwctl
 Architecture: all
-Depends: perfsonar-oppd-server, bwctl-client (>= 1.5), bwctl-server (>= 1.5),
- ${misc:Depends}
+Depends: perfsonar-oppd-server (= ${binary:Version}),
+ bwctl-client (>= 1.5), bwctl-server (>= 1.5), ${misc:Depends}
 Description: On-demand measurement point BWCTL support
  Provides on-demand BWCTL measurements through a web interface.
 
 Package: perfsonar-oppd-owamp
 Architecture: all
-Depends: perfsonar-oppd-server, owamp-client, owamp-server, ${misc:Depends}
+Depends: perfsonar-oppd-server (= ${binary:Version}),
+ owamp-client, owamp-server, ${misc:Depends}
 Description: On-demand measurement point OWAMP support
  Provides on-demand OWAMP measurements through a web interface.
