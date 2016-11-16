@@ -31,8 +31,10 @@ case "$1" in
             rmdir --ignore-fail-on-non-empty /etc/perfsonar/oppd.d
         fi
 
-        if [ -x "/etc/init.d/perfsonar-oppd-server" ]; then
-            invoke-rc.d perfsonar-oppd-server restart || exit $?
+        if ! grep -qs '^OPPDRUN=no' /etc/default/perfsonar-oppd-server && \
+           [ -x "/etc/init.d/perfsonar-oppd-server" ]
+        then
+            invoke-rc.d perfsonar-oppd-server restart || true
         fi
     ;;
 
