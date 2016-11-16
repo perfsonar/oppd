@@ -37,6 +37,11 @@ case "$1" in
                     3.5.1~4.rc1-2~ -- "$@"
             fi
         done
+
+        # Disable service on upgrade to 4.0
+        if [ "$1" = "upgrade" ] && dpkg --compare-versions "$2" lt 4.0; then
+            deb-systemd-helper disable perfsonar-oppd-server.service
+        fi
     ;;
 
     abort-upgrade)
