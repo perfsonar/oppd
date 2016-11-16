@@ -1,5 +1,5 @@
 #!/bin/sh
-# preinst script for bwctl-oppd-owamp
+# preinst script for perfsonar-oppd-owamp
 #
 # see: dh_installdeb(1)
 
