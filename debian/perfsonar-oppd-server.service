@@ -12,6 +12,7 @@ Group=perfsonar
 PermissionsStartOnly=true
 ExecStart=/usr/lib/perfsonar/bin/oppd-server.pl --config=/etc/perfsonar/oppd-server.conf --pidfile=/var/run/perfsonar-oppd-server.pid --logfile=/var/log/perfsonar/oppd-server.log
 ExecStopPost=/bin/rm -f /var/run/perfsonar-oppd-server.pid
+SuccessExitStatus=1
 
 [Install]
 WantedBy=multi-user.target
