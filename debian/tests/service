@@ -2,6 +2,14 @@
 
 set -e
 
+service perfsonar-oppd-server status || true
+echo service now disabled by default: OK
+
+service perfsonar-oppd-server start
+echo service start: OK
+
 service perfsonar-oppd-server status
+echo service status: OK
 
 pgrep -fl oppd-server.pl
+echo service process: OK
