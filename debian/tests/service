@@ -5,6 +5,7 @@ set -e
 service perfsonar-oppd-server status || true
 echo service now disabled by default: OK
 
+sed -i 's/OPPDRUN=.*/OPPDRUN=yes/' /etc/default/perfsonar-oppd-server
 service perfsonar-oppd-server start
 echo service start: OK
 
