@@ -1,16 +1,16 @@
-perfsonar-oppd (4.0~2.rc2-1~bpo70+1) perfsonar-wheezy-staging; urgency=low
+perfsonar-oppd (4.0-1~bpo70+1) perfsonar-wheezy-release; urgency=low
 
   * Backport to Wheezy.
 
- -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Wed, 16 Nov 2016 12:12:18 +0100
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 13 Apr 2017 14:19:54 +0000
 
-perfsonar-oppd (4.0~2.rc2-1) perfsonar-jessie-staging; urgency=low
+perfsonar-oppd (4.0-1) perfsonar-jessie-release; urgency=low
 
   * Adding /etc/default/perfsonar-oppd-server file to enable/disable the
     daemon.
   * Daemon stopped and disabled by default.
 
- -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Wed, 16 Nov 2016 11:54:24 +0100
+ -- Antoine Delvaux <antoine.delvaux@man.poznan.pl>  Thu, 13 Apr 2017 14:18:16 +0000
 
 perfsonar-oppd (3.5.1.1-1) perfsonar-jessie-release; urgency=high
 
