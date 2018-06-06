@@ -1,13 +1,14 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: oppd
+Upstream-Name: perfsonar-oppd
 Source: https://github.com/perfsonar/oppd
 
 Files: *
-Copyright: Copyright 2010 Verein zur Foerderung eines Deutschen Forschungsnetzes e. V.
+Copyright: 2010 Verein zur Foerderung eines Deutschen Forschungsnetzes e. V.
+           2011-2018 perfSONAR project
 License: Apache-2.0
 
 Files: debian/*
-Copyright: 2015 Valentin Vidic <Valentin.Vidic@CARNet.hr>
+Copyright: 2015-2018 perfSONAR project
 License: Apache-2.0
 
 License: Apache-2.0
