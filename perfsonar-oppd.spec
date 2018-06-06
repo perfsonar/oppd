@@ -12,7 +12,7 @@ Name:			perfsonar-oppd
 Version:		4.0
 Release:		%{relnum}%{?dist}
 Summary:		perfSONAR OPPD Measurement Point
-License:		Distributable, see LICENSE
+License:		ASL 2.0
 Group:			Development/Libraries
 URL:			http://www.perfsonar.net/
 Source0:		perfsonar-oppd-%{version}.%{relnum}.tar.gz
@@ -301,6 +301,7 @@ exit 0
 
 %files shared
 %defattr(-,perfsonar,perfsonar,-)
+%license LICENSE
 %{install_base}/lib/NMWG/*
 %{install_base}/lib/NMWG.pm
 %{install_base}/lib/perfSONAR.pm
@@ -322,6 +323,7 @@ exit 0
 
 %files server
 %defattr(-,perfsonar,perfsonar,-)
+%license LICENSE
 %attr(755, perfsonar, perfsonar) %{install_base}/bin/oppd-server.pl
 %config %{config_base}/oppd-server.conf
 %config /etc/sysconfig/oppd-server
@@ -333,11 +335,13 @@ exit 0
 
 %files bwctl
 %defattr(-,perfsonar,perfsonar,-)
+%license LICENSE
 %config %{config_base}/oppd-server.d/bwctl.conf
 %{install_base}/lib/perfSONAR/MP/BWCTL.pm
 
 %files owamp
 %defattr(-,perfsonar,perfsonar,-)
+%license LICENSE
 %config %{config_base}/oppd-server.d/owamp.conf
 %{install_base}/lib/perfSONAR/MP/OWAMP.pm
 
