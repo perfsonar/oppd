@@ -1,4 +1,4 @@
-**As of April 2017 OPPD is development is discontinued and no new features are being added.  See http://www.perfsonar.net/release-notes/version-4-0/ for more information.**  Feel free to fork this repository if you need this service.
+**As of April 2017 OPPD is development is discontinued and no new features are being added nor security fixes will be corrected.  See https://www.perfsonar.net/releasenotes-2017-04-17-4-0.html for more information.**
 
 # perfSONAR OPPD
 
